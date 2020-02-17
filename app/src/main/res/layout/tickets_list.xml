@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relative_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/iv_descriptiva"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/iv_descriptiva"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/tv_tienda_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/iv_descriptiva"
+        android:text="@string/tv_tienda"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+    <TextView
+        android:id="@+id/tv_tienda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/tv_tienda_titulo"
+        android:text="Media Markt" />
+    <TextView
+        android:id="@+id/tv_fecha_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/iv_descriptiva"
+        android:text="@string/tv_fecha"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+    <TextView
+        android:id="@+id/tv_fecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/tv_fecha_titulo"
+        android:text="10-12-2019" />
+    <TextView
+        android:id="@+id/tv_descricpion_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/iv_descriptiva"
+        android:text="@string/tv_descripcion"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+    <TextView
+        android:id="@+id/tv_descricpion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/tv_descricpion_titulo"
+        android:text="Frigorífico Casa" />
+
+
+</RelativeLayout>

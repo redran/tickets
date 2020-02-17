@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/menuListado">
+        <menu>
+            <item android:title="@string/menuTodos"
+                android:id="@+id/todo"/>
+            <item android:title="@string/menuCaduca"
+                android:id="@+id/caducan"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/menuNuevo"
+        android:id="@+id/newticket"/>
+    <item android:title="@string/menuBuscar"
+        android:id="@+id/findticket"/>
+
+    <item android:title="@string/menuCerrar"
+        android:id="@+id/closesission"/>
+
+
+    <item android:title="@string/menuNuevo"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="ifRoom"
+        android:id="@+id/newticketicon"/>
+    <item android:title="@string/menuBuscar"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="ifRoom"
+        android:id="@+id/findticketicon"/>
+</menu>

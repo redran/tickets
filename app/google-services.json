@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "867635034989",
+    "firebase_url": "https://mistickets-c4325.firebaseio.com",
+    "project_id": "mistickets-c4325",
+    "storage_bucket": "mistickets-c4325.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867635034989:android:b60311e27083be65eef864",
+        "android_client_info": {
+          "package_name": "es.leocaudete.mistickets"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "867635034989-5d5osd04ncb5kjjlncs584k0tmu93qo7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.leocaudete.mistickets",
+            "certificate_hash": "45b97658fdc4d76aab1133c6774bbd00a9fe9fe4"
+          }
+        },
+        {
+          "client_id": "867635034989-nrgsv5s72g133dp1aod1su7vrkr3siq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA5JOP7dpnNqMzLKx071O_6h1hll5HSaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "867635034989-nrgsv5s72g133dp1aod1su7vrkr3siq3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
