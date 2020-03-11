@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import es.leocaudete.mistickets.modelo.Ticket
 import kotlinx.android.synthetic.main.activity_busquedas.*
 import java.util.*
 
@@ -67,7 +68,7 @@ class Busquedas : AppCompatActivity() {
     private fun inicializaCampos() {
 
 
-        // Rellenamos el Spinner de Provincias
+        // Rellenamos el Spinner de Provincias lk
         val adapterProvincias = ArrayAdapter.createFromResource(
             this,
             R.array.provincias,

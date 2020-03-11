@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.Path
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -13,7 +14,8 @@ import android.provider.MediaStore
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.auth.FirebaseAuth
+import es.leocaudete.mistickets.modelo.Ticket
 import kotlinx.android.synthetic.main.activity_gestor_fotos.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -26,14 +28,16 @@ import java.io.IOException
 class GestorFotos : AppCompatActivity() {
 
     lateinit var unTicket: Ticket
-    lateinit var storageDir: File
+    lateinit var storageDir: String
     var isEdited: Boolean = false
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gestor_fotos)
 
-        storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        auth= FirebaseAuth.getInstance()
+        storageDir =getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
         // Recuperamos el ticket y seguimos rellenando los datos con las fotos
         unTicket = intent.getSerializableExtra("unTicket") as Ticket
         isEdited = intent.getBooleanExtra("isEdited", false)
@@ -61,6 +65,7 @@ class GestorFotos : AppCompatActivity() {
      */
     @Throws(IOException::class)
     private fun createTemporalFile(numFoto: Int): File{
+
 
         var file: File = File(storageDir, "FotoTemporal$numFoto.jpg")
         if (file.exists()) {
@@ -229,26 +234,26 @@ class GestorFotos : AppCompatActivity() {
         if (unTicket.foto1 == null) {
             img_foto1.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
-            img_foto1.setImageURI(Uri.parse(storageDir.toString() + "/" + unTicket.foto1))
+            img_foto1.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto1))
         }
 
         if (unTicket.foto2 == null) {
             img_foto2.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
 
-            img_foto2.setImageURI(Uri.parse(storageDir.toString() + "/" + unTicket.foto2))
+            img_foto2.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto2))
         }
 
         if (unTicket.foto3 == null) {
             img_foto3.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
-            img_foto3.setImageURI(Uri.parse(storageDir.toString() + "/" + unTicket.foto3))
+            img_foto3.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto3))
         }
 
         if (unTicket.foto4 == null) {
             img_foto4.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
-            img_foto4.setImageURI(Uri.parse(storageDir.toString() + "/" + unTicket.foto4))
+            img_foto4.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto4))
         }
     }
 

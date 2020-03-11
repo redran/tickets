@@ -1,4 +1,5 @@
 <resources>
+    <!-- Login -->
     <string name="app_name">Mis Tickets</string>
     <string name="btn_logina">INICIA SESION</string>
     <string name="link_forgotpass">¿Olvidaste tú contraseña?</string>
@@ -6,6 +7,10 @@
     <string name="ed_user">Usuario</string>
     <string name="ed_password">Contraseña</string>
     <string name="check_recuerda_credenciales">Recordar Credenciales</string>
+    <string name="online">On-Line </string>
+    <string name="barra">/ </string>
+    <string name="offline">Off-Line </string>
+    <string name="sw"></string>
     <!-- Registro -->
     <string name="bt_registro">Registrar Usuario</string>
     <string name="ed_nombre">Nombre</string>
@@ -13,8 +18,10 @@
     <string name="ed_email">E-Mail</string>
     <string name="ed_repite_password">Repite la Contraseña</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="pin">Pin de Seguridad</string>
     <!-- Recuperar Contraseña -->
     <string name="bt_recoverypass">Enviar Contraseña</string>
+    <string name="bt_recoverypass_local">Introduce el PIN de seguridad</string>
     <!-- RecyCledView Tickets -->
     <string name="iv_descriptiva">Imagen de la compra</string>
     <string name="tv_tienda">Establecimiento:</string>
@@ -64,6 +71,7 @@
     <string name="menuBuscar">Buscar</string>
     <string name="menuSyc">Sycronizar Imagenes</string>
     <string name="menuCerrar">Cerrar Sesion</string>
+    <string name="borrar_usuario">Eliminar Usuario</string>
 
     <!--lista de privincias en España -->
     <string-array name="provincias">

@@ -3,7 +3,6 @@ package es.leocaudete.mistickets
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -21,12 +20,12 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import es.leocaudete.mistickets.adapters.RecyclerAdapter
+import es.leocaudete.mistickets.login.Login
+import es.leocaudete.mistickets.modelo.Ticket
 
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -36,7 +35,8 @@ import java.time.temporal.ChronoUnit
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "DocSnippets"
-    private val myAdapter: RecyclerAdapter = RecyclerAdapter()
+    private val myAdapter: RecyclerAdapter =
+        RecyclerAdapter()
     var tickets = mutableListOf<Ticket>() // va a almacenar todos los tickets
     var ticketsQueVanACaducar = mutableListOf<Ticket>()
     private val CHANNEL_ID = "es.leocaudete.mistickets"
@@ -156,6 +156,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.findticketicon -> {
                 buscar()
+                true
+            }
+            R.id.eliminar_usuario ->{
+
                 true
             }
 

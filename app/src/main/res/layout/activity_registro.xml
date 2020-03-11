@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Registro">
+    tools:context=".login.Registro">
 
     <EditText
         android:id="@+id/ed_nombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="97dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="21dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/ed_nombre"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -76,20 +76,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ed_password" />
 
+    <EditText
+        android:id="@+id/ed_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="21dp"
+        android:ems="10"
+        android:hint="@string/pin"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ed_repeatpassword" />
+
     <Button
-        android:onClick="register"
         android:id="@+id/bt_registro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="68dp"
         android:layout_marginEnd="21dp"
-        android:text="@string/bt_registro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_repeatpassword"
+        android:layout_marginBottom="70dp"
         android:background="@color/colorPrimary"
-        android:textColor="@android:color/white"/>
+        android:onClick="register"
+        android:text="@string/bt_registro"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"

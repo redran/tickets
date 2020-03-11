@@ -16,6 +16,9 @@
     <item android:title="@string/menuBuscar"
         android:id="@+id/findticket"/>
 
+    <item android:title="@string/borrar_usuario"
+        android:id="@+id/eliminar_usuario"/>
+
     <item android:title="@string/menuCerrar"
         android:id="@+id/closesission"/>
 

@@ -1,39 +1,37 @@
 package es.leocaudete.mistickets
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.text.TextUtils
 import android.view.MotionEvent
-import android.view.MotionEvent.ACTION_DOWN
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_gestor_fotos.*
+import es.leocaudete.mistickets.modelo.Ticket
 import kotlinx.android.synthetic.main.activity_visor_fotos.*
-import kotlinx.android.synthetic.main.activity_visor_ticket.*
 import java.io.File
 /**
  * @author Leonardo Caudete Palau - 2º DAM
  */
 class VisorFotos : AppCompatActivity() {
-    lateinit var storageDir: File
+    lateinit var storageDir: String
+    private lateinit var auth: FirebaseAuth
     var pDownX=0
     var pUpX=0
 
 
-    var unTicket=Ticket()
+    var unTicket= Ticket()
     var fotoactual=1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_visor_fotos)
 
-        storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        auth= FirebaseAuth.getInstance()
+        storageDir =getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
         unTicket = intent.getSerializableExtra("unTicket") as Ticket
 
 
@@ -98,7 +96,6 @@ class VisorFotos : AppCompatActivity() {
     fun cargaFoto(foto:String?){
         if(foto!=null && foto!="null"){
             var storageRef = FirebaseStorage.getInstance().reference
-            var auth= FirebaseAuth.getInstance()
 
             var rutaFoto=auth.currentUser?.uid.toString()+"/"+  foto
             val pathReference = storageRef.child(rutaFoto)

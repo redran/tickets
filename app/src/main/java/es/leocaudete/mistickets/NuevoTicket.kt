@@ -2,9 +2,7 @@ package es.leocaudete.mistickets
 
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -16,9 +14,11 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import es.leocaudete.mistickets.modelo.Ticket
 import kotlinx.android.synthetic.main.activity_nuevo_ticket.*
 import java.io.File
 import java.util.*
@@ -42,8 +42,7 @@ class NuevoTicket : AppCompatActivity() {
         setContentView(R.layout.activity_nuevo_ticket)
 
 
-        // Ruta de acceso al directorio local donde se guardan las imagenes
-        storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString()
+
         // le decimos lo que va ha ahacer el bton de calendarioo
         img_calendar.setOnClickListener {
 
@@ -77,7 +76,11 @@ class NuevoTicket : AppCompatActivity() {
 
         // Asociamos el ticket con el usuario
         auth=FirebaseAuth.getInstance()
+
         unTicket.idusuario= auth.currentUser?.uid.toString()
+
+        // Ruta de acceso al directorio local donde se guardan las imagenes
+        storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
 
         inicializaCampos()
 
@@ -294,6 +297,8 @@ class NuevoTicket : AppCompatActivity() {
             }
         }
 
+        unTicket.fecha_modificacion= Timestamp.now().seconds.toString() // Siempre guardamos la fecha de modificación para syncronizar
+
 
     }
 
@@ -355,19 +360,17 @@ class NuevoTicket : AppCompatActivity() {
      */
     fun borraFoto(numFoto:Int){
 
-        var storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-
         if(enEdicion){
             // Comprobamos si existe en local y lo eliminamos
-            if(File(storageDir.toString() + "/" + "edited_" + unTicket.idTicket + "_foto"+numFoto+".jpg").exists())
+            if(File(storageLocalDir + "/" + "edited_" + unTicket.idTicket + "_foto"+numFoto+".jpg").exists())
             {
-                File(storageDir.toString() + "/" + "edited_" + unTicket.idTicket + "_foto"+numFoto+".jpg").delete()
+                File(storageLocalDir + "/" + "edited_" + unTicket.idTicket + "_foto"+numFoto+".jpg").delete()
             }
         }else{
             // Comprobamos si existe en local y lo eliminamos
-            if(File(storageDir.toString() + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg").exists())
+            if(File(storageLocalDir + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg").exists())
             {
-                File(storageDir.toString() + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg").delete()
+                File(storageLocalDir + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg").delete()
             }
         }
 
