@@ -1,6 +1,7 @@
 package es.leocaudete.mistickets
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_visor_fotos.*
 import java.io.File
 /**
@@ -31,8 +33,14 @@ class VisorFotos : AppCompatActivity() {
         setContentView(R.layout.activity_visor_fotos)
 
         auth= FirebaseAuth.getInstance()
-        storageDir =getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
         unTicket = intent.getSerializableExtra("unTicket") as Ticket
+
+        if(SharedApp.preferences.bdtype){
+            storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+        }else{
+            storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
+        }
+
 
 
         cargaFoto(unTicket.foto1)
@@ -95,18 +103,23 @@ class VisorFotos : AppCompatActivity() {
 
     fun cargaFoto(foto:String?){
         if(foto!=null && foto!="null"){
-            var storageRef = FirebaseStorage.getInstance().reference
+            if(SharedApp.preferences.bdtype){
+                var storageRef = FirebaseStorage.getInstance().reference
 
-            var rutaFoto=auth.currentUser?.uid.toString()+"/"+  foto
-            val pathReference = storageRef.child(rutaFoto)
+                var rutaFoto=auth.currentUser?.uid.toString()+"/"+  foto
+                val pathReference = storageRef.child(rutaFoto)
 
-            pathReference.downloadUrl.addOnSuccessListener {
-                Picasso.get()
-                    .load(it)
-                    //.resize(400,800)
-                    .into(imgFoto)
+                pathReference.downloadUrl.addOnSuccessListener {
+                    Picasso.get()
+                        .load(it)
+                        //.resize(400,800)
+                        .into(imgFoto)
+                }
+            }else{
+                imgFoto.setImageBitmap(BitmapFactory.decodeFile("$storageDir/$foto"))
             }
-          //  imgFoto.setImageBitmap(BitmapFactory.decodeFile(storageDir.toString() + "/" + foto))
+
+
         }
         else{
             imgFoto.setImageResource(R.drawable.googleg_disabled_color_18)

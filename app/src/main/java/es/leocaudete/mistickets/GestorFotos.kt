@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.firebase.auth.FirebaseAuth
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_gestor_fotos.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -37,12 +38,21 @@ class GestorFotos : AppCompatActivity() {
         setContentView(R.layout.activity_gestor_fotos)
 
         auth= FirebaseAuth.getInstance()
-        storageDir =getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+
+
+
         // Recuperamos el ticket y seguimos rellenando los datos con las fotos
         unTicket = intent.getSerializableExtra("unTicket") as Ticket
         isEdited = intent.getBooleanExtra("isEdited", false)
 
+        if(SharedApp.preferences.bdtype){
+            storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+        }else{
+            // Para la primera vez, vemmos si el directorio existe, sino, lo creamos
+            storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
 
+
+        }
 
         cargaInicial()
 

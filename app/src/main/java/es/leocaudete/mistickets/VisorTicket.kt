@@ -1,6 +1,7 @@
 package es.leocaudete.mistickets
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
@@ -13,7 +14,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_visor_ticket.*
 import java.io.File
 
@@ -23,7 +26,8 @@ import java.io.File
 class VisorTicket : AppCompatActivity() {
 
     lateinit var paramTicket: Ticket
-    lateinit var storageDir: File
+    lateinit var storageDir: String
+    lateinit var dbSQL: SQLiteDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +35,17 @@ class VisorTicket : AppCompatActivity() {
 
         // Cargamos nuestra toolbar.
         setSupportActionBar(visorTicketsToolBar)
-        storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+
+
+        // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
+        dbSQL = SQLiteDB(this, null)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         paramTicket = intent.getSerializableExtra("TicketVisor") as Ticket
+        storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + paramTicket.idTicket
         cargaImgPortada()
         cargarCampos()
 
@@ -44,29 +53,34 @@ class VisorTicket : AppCompatActivity() {
     }
 
     fun cargaImgPortada() {
-        var storageRef = FirebaseStorage.getInstance().reference
-        var auth = FirebaseAuth.getInstance()
 
-        if (TextUtils.isEmpty(paramTicket.foto1) || paramTicket.foto1 == null) {
-            imgPortada.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
-        } else {
+        if(SharedApp.preferences.bdtype){
+            var storageRef = FirebaseStorage.getInstance().reference
+            var auth = FirebaseAuth.getInstance()
 
-            // desde internet va muy lento
-            var rutaFoto = auth.currentUser?.uid.toString() + "/" + paramTicket.foto1
-            val pathReference = storageRef.child(rutaFoto)
+            if (TextUtils.isEmpty(paramTicket.foto1) || paramTicket.foto1 == null) {
+                imgPortada.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
+            } else {
 
-            pathReference.downloadUrl.addOnSuccessListener {
-                Picasso.get()
-                    .load(it)
-                    //.resize(400,800)
-                    .into(imgPortada)
+                // desde internet va muy lento
+                var rutaFoto = auth.currentUser?.uid.toString() + "/" + paramTicket.foto1
+                val pathReference = storageRef.child(rutaFoto)
+
+                pathReference.downloadUrl.addOnSuccessListener {
+                    Picasso.get()
+                        .load(it)
+                        //.resize(400,800)
+                        .into(imgPortada)
+
+                }
 
             }
-            /* // lo hacemos desde local
-             storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-             imgPortada.setImageBitmap(BitmapFactory.decodeFile(storageDir.toString() + "/" + paramTicket.foto1))*/
+        }else{
+           //lo hacemos desde local
+                 imgPortada.setImageBitmap(BitmapFactory.decodeFile(storageDir + "/" + paramTicket.foto1))
 
         }
+
     }
 
     // inflamos nuestro menu
@@ -111,34 +125,41 @@ class VisorTicket : AppCompatActivity() {
     // Borra las fotos de Firebase Store
     fun borrarTicket() {
 
+        if(SharedApp.preferences.bdtype){
+            for (i in 1..4) {
+                when (i) {
+                    1 -> borraFoto(i, paramTicket.foto1)
+                    2 -> borraFoto(i, paramTicket.foto2)
+                    3 -> borraFoto(i, paramTicket.foto3)
+                    4 -> borraFoto(i, paramTicket.foto4)
+                }
 
-        for (i in 1..4) {
-            when (i) {
-                1 -> borraFoto(i, paramTicket.foto1)
-                2 -> borraFoto(i, paramTicket.foto2)
-                3 -> borraFoto(i, paramTicket.foto3)
-                4 -> borraFoto(i, paramTicket.foto4)
             }
+            // Esto elimina el ticket de Cloud Firebase con todos sus datos
+            val dbRef = FirebaseFirestore.getInstance()
+            val ticketRef = dbRef.collection("User").document(paramTicket.idusuario)
+                .collection("Tickets").document(paramTicket.idTicket).delete().addOnSuccessListener {
+                    var intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+        }else{
 
+            dbSQL.deleteTicket(paramTicket.idTicket)
+            var intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
-        // Esto elimina el ticket de Cloud Firebase con todos sus datos
-        val dbRef = FirebaseFirestore.getInstance()
-        val ticketRef = dbRef.collection("User").document(paramTicket.idusuario)
-            .collection("Tickets").document(paramTicket.idTicket).delete().addOnSuccessListener {
-                var intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }
     }
 
     fun borraFoto(numFoto: Int, foto: String?) {
 
+        /**
         // Comprobamos si existe en local y lo eliminamos
-        if (foto!=null){
+        if (foto != null) {
             if (File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").exists()) {
                 File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").delete()
             }
-        }
+        }*/
 
 
         // Comprobamos si existe en la nube y lo eliminamos

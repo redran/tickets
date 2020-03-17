@@ -45,6 +45,8 @@ class Login : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         SharedApp.preferences.usuario_logueado=""
 
+
+
     }
 
     override fun onStart() {
@@ -136,14 +138,12 @@ class Login : AppCompatActivity() {
 
         // Solo si ha aceptado el email de verificacion
         if (auth.currentUser!!.isEmailVerified) {
-            // creamos el directorio local del usuario (Lo hara solo la primera vez)
             storageDir =
                 getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
-            val home_dir = File(storageDir)
+          /*  val home_dir = File(storageDir)
             if (!home_dir.exists()) {
                 home_dir.mkdirs()
-            }
-
+            }*/
             startActivity(Intent(this, MainActivity::class.java))
         } else {
             // En este punto tendríamos que verificar si la fecha de ingreso y la actual tienen 1 mes de diferencia y si la tienen eliminar la cuenta de firebase
@@ -154,6 +154,8 @@ class Login : AppCompatActivity() {
             )
         }
 
+
+
     }
 
     /**
@@ -162,11 +164,18 @@ class Login : AppCompatActivity() {
      * si es asi graba en la propiedad el valor del id de usuario
      */
     private fun loginOffLine(user: String, password: String) {
+
         val email=ed_user.text.toString()
         if(dbSQL.buscaUsuario(email)){
             if(dbSQL.validaPassword(email,password)){
                 SharedApp.preferences.usuario_logueado = dbSQL.buscaIdUsuario(email)
-                gestorMensages.showAlertOneButton("PRUEBA","Usuario local validado, id: " + SharedApp.preferences.usuario_logueado ,this )
+                storageDir =
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado
+                val home_dir = File(storageDir)
+                if (!home_dir.exists()) {
+                    home_dir.mkdirs()
+                }
+                startActivity(Intent(this, MainActivity::class.java))
             }else{
                 gestorMensages.showAlertOneButton("ERROR","La contraseña no es correcta",this )
             }

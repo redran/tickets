@@ -13,9 +13,9 @@ class Preferences(context:Context) {
      * Almacena true o false si se quiere guardar o no la sesion
      */
     val PREFS_NAME = "es.leocaudete.mistickets"
-    val LOGIN_PERISTENCE = "login"
-    val LOCAL_DB = "bd"
-    val ID_USU = "id"
+    private val LOGIN_PERISTENCE = "login"
+    private val LOCAL_DB = "bd"
+    private val ID_USU = "id"
 
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 

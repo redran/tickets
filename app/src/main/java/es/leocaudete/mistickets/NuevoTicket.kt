@@ -18,7 +18,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.preferences.SharedApp
+import es.leocaudete.mistickets.utilidades.ShowMessages
 import kotlinx.android.synthetic.main.activity_nuevo_ticket.*
 import java.io.File
 import java.util.*
@@ -33,8 +36,10 @@ class NuevoTicket : AppCompatActivity() {
     var unTicket= Ticket()
     var enEdicion:Boolean=false // Nos indica si hemos entrado para editar o para insertar
     private lateinit var auth: FirebaseAuth
+    var gestorMensajes=ShowMessages()
 
     lateinit var storageLocalDir: String
+    lateinit var dbSQL: SQLiteDB
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,10 +82,24 @@ class NuevoTicket : AppCompatActivity() {
         // Asociamos el ticket con el usuario
         auth=FirebaseAuth.getInstance()
 
-        unTicket.idusuario= auth.currentUser?.uid.toString()
+        if(SharedApp.preferences.bdtype){
+            unTicket.idusuario= auth.currentUser?.uid.toString()
+        }else{
+            unTicket.idusuario= SharedApp.preferences.usuario_logueado
+        }
+
 
         // Ruta de acceso al directorio local donde se guardan las imagenes
-        storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+        if(SharedApp.preferences.bdtype){
+            storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+        }else{
+            storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
+            val home_dir = File(storageLocalDir)
+            if (!home_dir.exists()) {
+                home_dir.mkdirs()
+            }
+        }
+
 
         inicializaCampos()
 
@@ -94,6 +113,9 @@ class NuevoTicket : AppCompatActivity() {
 
         // Cargamos nuestra toolbar.
         setSupportActionBar(toolbar)
+
+        // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
+        dbSQL = SQLiteDB(this, null)
 
     }
 
@@ -205,26 +227,40 @@ class NuevoTicket : AppCompatActivity() {
         if(validacion())
         {
             rellenaObjeto()
-
-            val dbRef=FirebaseFirestore.getInstance()
-            grabaFoto(1,unTicket.foto1)
-            grabaFoto(2,unTicket.foto2)
-            grabaFoto(3,unTicket.foto3)
-            grabaFoto(4,unTicket.foto4)
-            val ticketRef = dbRef.collection("User").document(unTicket.idusuario)
-                .collection("Tickets").document(unTicket.idTicket)
-                .set(unTicket)
-                .addOnSuccessListener {
+            if(SharedApp.preferences.bdtype){
+                val dbRef=FirebaseFirestore.getInstance()
+                grabaFoto(1,unTicket.foto1,false)
+                grabaFoto(2,unTicket.foto2,false)
+                grabaFoto(3,unTicket.foto3,false)
+                grabaFoto(4,unTicket.foto4,false)
+                val ticketRef = dbRef.collection("User").document(unTicket.idusuario)
+                    .collection("Tickets").document(unTicket.idTicket)
+                    .set(unTicket)
+                    .addOnSuccessListener {
+                        startActivity(Intent(this,MainActivity::class.java))
+                        finish()
+                    }
+                    .addOnFailureListener{ Toast.makeText(this,"No se ha podido registrar el Ticket", Toast.LENGTH_LONG).show()}
+            }else{
+                grabaFoto(1,unTicket.foto1,true)
+                grabaFoto(2,unTicket.foto2,true)
+                grabaFoto(3,unTicket.foto3,true)
+                grabaFoto(4,unTicket.foto4,true)
+                if(dbSQL.addTicket(unTicket)>0){
                     startActivity(Intent(this,MainActivity::class.java))
-                    finish()
+                }else{
+                    gestorMensajes.showAlertOneButton("ERROR","Error al insertar el ticket", this)
                 }
-                .addOnFailureListener{ Toast.makeText(this,"No se ha podido registrar el Ticket", Toast.LENGTH_LONG).show()}
+
+            }
+
+
         }
     }
 
 
-    // Graba foto en cloud
-    fun grabaFoto(numFoto: Int, fotoTicket: String?){
+    // Graba foto
+    fun grabaFoto(numFoto: Int, fotoTicket: String?, local:Boolean){
 
         var strFoto:String=unTicket.idTicket + "_foto"+numFoto+".jpg"
 
@@ -240,12 +276,15 @@ class NuevoTicket : AppCompatActivity() {
         // Guardamos en la nube
         if(fotoTicket!=null)
         {
-            var storageRef = FirebaseStorage.getInstance().reference
-            var riverRef=storageRef.child(auth.currentUser?.uid.toString()+"/" + unTicket.idTicket + "_foto"+numFoto+".jpg")
+            if(!local){
+                var storageRef = FirebaseStorage.getInstance().reference
+                var riverRef=storageRef.child(auth.currentUser?.uid.toString()+"/" + unTicket.idTicket + "_foto"+numFoto+".jpg")
 
-            // var uri=Uri.parse(storageLocalDir + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg")
-            var uri=Uri.fromFile(File("$storageLocalDir/$strFoto"))
-            var uploadTask = riverRef.putFile(uri)
+                // var uri=Uri.parse(storageLocalDir + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg")
+                var uri=Uri.fromFile(File("$storageLocalDir/$strFoto"))
+                var uploadTask = riverRef.putFile(uri)
+            }
+
 
         }
 
@@ -279,6 +318,7 @@ class NuevoTicket : AppCompatActivity() {
         else{
             unTicket.periodo_garantia=1
         }
+
         unTicket.avisar_fin_garantia = check_aviso.isChecked
 
         // Si estamos editando tenemos que cambiar la referencia a las fotos

@@ -2,6 +2,8 @@ package es.leocaudete.mistickets.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,8 @@ import com.squareup.picasso.Picasso
 import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.VisorTicket
+import es.leocaudete.mistickets.preferences.SharedApp
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
 /**
@@ -74,18 +78,22 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
             }
             else
             {
-                // Esto era para cargar desde firebase pero va muy lento
-                var rutaFoto=auth.currentUser?.uid.toString()+"/"+ticket.foto1
-                val pathReference = storageRef.child(rutaFoto)
+                var rutaFoto:String;
+                if(SharedApp.preferences.bdtype){
+                    rutaFoto=auth.currentUser?.uid.toString()+"/"+ticket.foto1
+                    val pathReference = storageRef.child(rutaFoto)
 
-                pathReference.downloadUrl.addOnSuccessListener {
-                    Picasso.get().load(it).into(foto)
+
+                    pathReference.downloadUrl.addOnSuccessListener {
+                        Picasso.get().load(it).into(foto)
+                    }
+                }else{
+                    var  storageLocalDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + ticket.idTicket
+                    rutaFoto=storageLocalDir +"/"+ticket.foto1
+                    foto.setImageBitmap(BitmapFactory.decodeFile(rutaFoto))
                 }
 
-              /*  // Cargamos desde local
-                storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                foto.setImageBitmap(BitmapFactory.decodeFile(storageDir.toString() + "/" + ticket.foto1))
-*/
+
             }
 
 

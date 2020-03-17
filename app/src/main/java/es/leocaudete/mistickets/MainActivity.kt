@@ -21,14 +21,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import es.leocaudete.mistickets.adapters.RecyclerAdapter
+import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.login.Login
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.preferences.SharedApp
 
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+
 /**
  * @author Leonardo Caudete Palau - 2º DAM
  */
@@ -42,6 +45,9 @@ class MainActivity : AppCompatActivity() {
     private val CHANNEL_ID = "es.leocaudete.mistickets"
     private val notificationId = 123456
     lateinit var storageLocalDir: String
+    lateinit var dbSQL: SQLiteDB
+
+    val idUsuario = SharedApp.preferences.usuario_logueado
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +55,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString()
         setSupportActionBar(toolbar)
+
+        // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
+        dbSQL = SQLiteDB(this, null)
 
         getTickets(tickets)
 
@@ -76,36 +85,51 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getTickets(reqTickets: MutableList<Ticket>) {
 
+
         pbCargando.visibility = View.VISIBLE
         tv_cargando.visibility = View.VISIBLE
 
+        // On-Line. Se carga Firebase
+        if (SharedApp.preferences.bdtype) {
+            val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
+            val auth = FirebaseAuth.getInstance() // Usuario autentificado
 
-        val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
-        val auth = FirebaseAuth.getInstance() // Usuario autentificado
+            val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
+            val rutaTickets = "User/" + userID + "/Tickets"
 
-        val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
-        val rutaTickets = "User/" + userID + "/Tickets"
+            val ticketsRef = dbRef.collection(rutaTickets)
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val ticket = document.toObject(Ticket::class.java)
+                        tickets.add(ticket)
+                    }
+                    setUpRecyclerView(reqTickets)
+                    revisaGarantias()
 
-        val ticketsRef = dbRef.collection(rutaTickets)
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    val ticket = document.toObject(Ticket::class.java)
-                    tickets.add(ticket)
                 }
-                setUpRecyclerView(reqTickets)
-                revisaGarantias()
 
+                .addOnFailureListener { exception ->
+                    Toast.makeText(
+                        this,
+                        "Se ha producido une error al cargar los datos: ",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.d(TAG, "Error getting documents:", exception)
+                }
+        } else {
+            // Off-Line. Se carga de SQLite
+            var ticketsUsu=dbSQL.devuelveTickets(SharedApp.preferences.usuario_logueado)
+            if((ticketsUsu).size>0){
+               for(i in ticketsUsu.indices){
+                   tickets.add(ticketsUsu[i])
+               }
             }
+            setUpRecyclerView(reqTickets)
+            revisaGarantias()
 
-            .addOnFailureListener { exception ->
-                Toast.makeText(
-                    this,
-                    "Se ha producido une error al cargar los datos: ",
-                    Toast.LENGTH_LONG
-                ).show()
-                Log.d(TAG, "Error getting documents:", exception)
-            }
+        }
+
 
     }
 
@@ -158,7 +182,7 @@ class MainActivity : AppCompatActivity() {
                 buscar()
                 true
             }
-            R.id.eliminar_usuario ->{
+            R.id.eliminar_usuario -> {
 
                 true
             }
