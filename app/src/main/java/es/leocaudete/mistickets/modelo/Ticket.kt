@@ -21,7 +21,7 @@ class Ticket: Serializable{
     var duracion_garantia: Int=0
     var periodo_garantia: Int=0 // 0 para Años y 1 para Meses
 
-    var avisar_fin_garantia: Boolean=false
+    var avisar_fin_garantia: Int=0 // 0 es false, desmarcado
 
     var foto_descritpiva:String?=null
     var foto1: String?=null

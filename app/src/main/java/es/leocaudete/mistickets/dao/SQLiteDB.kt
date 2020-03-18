@@ -171,7 +171,7 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return insertados
     }
 
-    fun deleteUsuario(id_usuario: Int) {
+    fun deleteUsuario(id_usuario: String) {
 
 
         val args = arrayOf(id_usuario)
@@ -202,9 +202,9 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     }
 
-    fun updateTicket(id_ticket: Int, ticket: Ticket) {
+    fun updateTicket(ticket: Ticket):Int {
 
-        val args = arrayOf(id_ticket.toString())
+        val args = arrayOf(ticket.idTicket)
 
         val data = ContentValues()
         data.put(DESCRIPCION_COMPRA, ticket.titulo)
@@ -223,8 +223,10 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
 
         val db = this.writableDatabase
-        db.update(TABLA_TICKETS, data, "$ID_TICKET=?", args)
+        val updateados=db.update(TABLA_TICKETS, data, "$ID_TICKET=?", args)
         db.close()
+
+        return updateados
     }
 
     /**
@@ -389,7 +391,7 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                     ticket.localidad=cursor.getString(7)
                     ticket.duracion_garantia=cursor.getInt(8)
                     ticket.periodo_garantia=cursor.getInt(9)
-                    ticket.avisar_fin_garantia = cursor.getInt(10)==0
+                    ticket.avisar_fin_garantia = cursor.getInt(10)
                     ticket.foto1=cursor.getString(11)
                     ticket.foto2=cursor.getString(12)
                     ticket.foto3=cursor.getString(13)

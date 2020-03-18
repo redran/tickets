@@ -89,16 +89,7 @@ class NuevoTicket : AppCompatActivity() {
         }
 
 
-        // Ruta de acceso al directorio local donde se guardan las imagenes
-        if(SharedApp.preferences.bdtype){
-            storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
-        }else{
-            storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
-            val home_dir = File(storageLocalDir)
-            if (!home_dir.exists()) {
-                home_dir.mkdirs()
-            }
-        }
+
 
 
         inicializaCampos()
@@ -109,6 +100,17 @@ class NuevoTicket : AppCompatActivity() {
             rellenaCampos()
             btn_aceptar.text=getString(R.string.update)
 
+        }
+
+        // Ruta de acceso al directorio local donde se guardan las imagenes
+        if(SharedApp.preferences.bdtype){
+            storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+        }else{
+            storageLocalDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
+        }
+        val home_dir = File(storageLocalDir)
+        if (!home_dir.exists()) {
+            home_dir.mkdirs()
         }
 
         // Cargamos nuestra toolbar.
@@ -135,7 +137,9 @@ class NuevoTicket : AppCompatActivity() {
         this.spinner_garantia.setSelection(unTicket.duracion_garantia,false)
 
         rd_annos.isChecked = unTicket.periodo_garantia==0
-        check_aviso.isChecked = unTicket.avisar_fin_garantia
+        rd_meses.isChecked = unTicket.periodo_garantia==1
+
+        check_aviso.isChecked = unTicket.avisar_fin_garantia==1
 
 
 
@@ -228,6 +232,11 @@ class NuevoTicket : AppCompatActivity() {
         {
             rellenaObjeto()
             if(SharedApp.preferences.bdtype){
+                /**
+                 * Con firebase se le pasa un ticket
+                 * Si es Nuevo habra creado un id_ticket al pulsar sobre nuevoTicket
+                 * Si es Aatualizacion se pasa elk ticket con el mismo id y lo chafa
+                 */
                 val dbRef=FirebaseFirestore.getInstance()
                 grabaFoto(1,unTicket.foto1,false)
                 grabaFoto(2,unTicket.foto2,false)
@@ -242,15 +251,27 @@ class NuevoTicket : AppCompatActivity() {
                     }
                     .addOnFailureListener{ Toast.makeText(this,"No se ha podido registrar el Ticket", Toast.LENGTH_LONG).show()}
             }else{
+                /**
+                 * Si por el contrario trabajamos co SQLite, al ser una base relacional, tenemos que distinguir y hacer Insert o Update
+                 */
                 grabaFoto(1,unTicket.foto1,true)
                 grabaFoto(2,unTicket.foto2,true)
                 grabaFoto(3,unTicket.foto3,true)
                 grabaFoto(4,unTicket.foto4,true)
-                if(dbSQL.addTicket(unTicket)>0){
-                    startActivity(Intent(this,MainActivity::class.java))
+                if(enEdicion){
+                    if(dbSQL.updateTicket(unTicket)>0){
+                        startActivity(Intent(this,MainActivity::class.java))
+                    }else{
+                        gestorMensajes.showAlertOneButton("ERROR","Error al actualizar el ticket", this)
+                    }
                 }else{
-                    gestorMensajes.showAlertOneButton("ERROR","Error al insertar el ticket", this)
+                    if(dbSQL.addTicket(unTicket)>0){
+                        startActivity(Intent(this,MainActivity::class.java))
+                    }else{
+                        gestorMensajes.showAlertOneButton("ERROR","Error al insertar el ticket", this)
+                    }
                 }
+
 
             }
 
@@ -261,6 +282,8 @@ class NuevoTicket : AppCompatActivity() {
 
     // Graba foto
     fun grabaFoto(numFoto: Int, fotoTicket: String?, local:Boolean){
+
+        // Para ambos casos tenemos que verificar si es edicion para renombrar
 
         var strFoto:String=unTicket.idTicket + "_foto"+numFoto+".jpg"
 
@@ -273,7 +296,7 @@ class NuevoTicket : AppCompatActivity() {
 
         }
 
-        // Guardamos en la nube
+        // Guardamos en la nube, en SQLite se guarda el fichero nada mas realizar la foto
         if(fotoTicket!=null)
         {
             if(!local){
@@ -319,7 +342,13 @@ class NuevoTicket : AppCompatActivity() {
             unTicket.periodo_garantia=1
         }
 
-        unTicket.avisar_fin_garantia = check_aviso.isChecked
+        if(check_aviso.isChecked){
+            unTicket.avisar_fin_garantia = 1
+        }else
+        {
+            unTicket.avisar_fin_garantia = 0
+        }
+
 
         // Si estamos editando tenemos que cambiar la referencia a las fotos
         if(enEdicion){
@@ -387,9 +416,12 @@ class NuevoTicket : AppCompatActivity() {
      */
     fun cancelarInsert(view: View) {
 
-        for(i in 1..4){
-            borraFoto(i)
+        // Si estamo sinsertando eliminado el directorio local creado y ya
+        // porque el ticket esta en memoria y se borrara al salir de la activity
+        if(!enEdicion){
+            dbSQL.utilidades.delRecFileAndDir(storageLocalDir)
         }
+
         startActivity(Intent(this,MainActivity::class.java))
         finish()
 

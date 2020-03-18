@@ -1,7 +1,6 @@
 package es.leocaudete.mistickets.login
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Environment
@@ -17,8 +16,6 @@ import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.ShowMessages
 import kotlinx.android.synthetic.main.login_activity.*
-import org.jetbrains.anko.email
-import java.io.File
 
 
 /**
@@ -43,9 +40,39 @@ class Login : AppCompatActivity() {
         dbSQL = SQLiteDB(this, null)
 
         auth = FirebaseAuth.getInstance()
-        SharedApp.preferences.usuario_logueado=""
+      /*  SharedApp.preferences.usuario_logueado = ""
+        SharedApp.preferences.bdtype = swbd.isChecked*/
 
+        val recordar = SharedApp.preferences.login
+        val dbcloud = SharedApp.preferences.bdtype
+        val userLog = SharedApp.preferences.usuario_logueado
 
+        if (recordar) {
+            // Si hemos recordado usuario, entonces tenemos que comprobar si es online u offline
+            if (dbcloud) {
+                if (auth.currentUser != null) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
+            } else {
+                if (!TextUtils.isEmpty(userLog)) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
+            }
+
+        } else {
+            if (dbcloud) {
+                auth.signOut()
+            } else {
+                SharedApp.preferences.usuario_logueado = ""
+
+            }
+            // Lo ponemos solo aqui porque si recuerda el usuario nunca va a mostrar la activity
+            cb_recordar.isChecked = false
+            swbd.isChecked = dbcloud
+            cambiaEstado()
+        }
 
     }
 
@@ -53,23 +80,7 @@ class Login : AppCompatActivity() {
         super.onStart()
         // Comprobamos en la preferencias si tenemos recordar a 0 entonces hacemos un singOut
 
-        var recordar = SharedApp.preferences.login
-        var dblocal = SharedApp.preferences.bdtype
 
-        if (recordar) {
-            if (auth.currentUser != null) {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-        } else {
-            auth.signOut()
-            cb_recordar.isChecked = false
-        }
-
-        // si trabajamon en online y offline
-        swbd.isChecked = dblocal
-
-        cambiaEstado()
     }
 
     fun clicksw(view: View) {
@@ -140,10 +151,6 @@ class Login : AppCompatActivity() {
         if (auth.currentUser!!.isEmailVerified) {
             storageDir =
                 getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
-          /*  val home_dir = File(storageDir)
-            if (!home_dir.exists()) {
-                home_dir.mkdirs()
-            }*/
             startActivity(Intent(this, MainActivity::class.java))
         } else {
             // En este punto tendríamos que verificar si la fecha de ingreso y la actual tienen 1 mes de diferencia y si la tienen eliminar la cuenta de firebase
@@ -155,7 +162,6 @@ class Login : AppCompatActivity() {
         }
 
 
-
     }
 
     /**
@@ -165,45 +171,39 @@ class Login : AppCompatActivity() {
      */
     private fun loginOffLine(user: String, password: String) {
 
-        val email=ed_user.text.toString()
-        if(dbSQL.buscaUsuario(email)){
-            if(dbSQL.validaPassword(email,password)){
+        val email = ed_user.text.toString()
+        if (dbSQL.buscaUsuario(email)) {
+            if (dbSQL.validaPassword(email, password)) {
                 SharedApp.preferences.usuario_logueado = dbSQL.buscaIdUsuario(email)
                 storageDir =
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado
-                val home_dir = File(storageDir)
-                if (!home_dir.exists()) {
-                    home_dir.mkdirs()
-                }
                 startActivity(Intent(this, MainActivity::class.java))
-            }else{
-                gestorMensages.showAlertOneButton("ERROR","La contraseña no es correcta",this )
+            } else {
+                gestorMensages.showAlertOneButton("ERROR", "La contraseña no es correcta", this)
             }
-        }else{
-            gestorMensages.showAlertOneButton("ERROR","El usuario no es correcto",this )
+        } else {
+            gestorMensages.showAlertOneButton("ERROR", "El usuario no es correcto", this)
         }
     }
 
     // Este metodo comprueba si hay datos en SQLite
     private fun compruebaDatosOffline() {
 
-       val email=ed_user.text.toString()
-        if(dbSQL.buscaUsuario(email)){
+        val email = ed_user.text.toString()
+        if (dbSQL.buscaUsuario(email)) {
             syncronizaOnLineDeOffLine(email)
         }
     }
 
 
-
     // Se ha encrontrado el usuario en Local y vamos a subir los cambios (si los hubiere) a Firebase
-    private fun syncronizaOnLineDeOffLine(email: String){
+    private fun syncronizaOnLineDeOffLine(email: String) {
 
-        val id_usuario=dbSQL.buscaIdUsuario(email)
-        if(!TextUtils.isEmpty(id_usuario)){
+        val id_usuario = dbSQL.buscaIdUsuario(email)
+        if (!TextUtils.isEmpty(id_usuario)) {
             // Busca todos los tickets de ese usuario
-            val args= arrayOf(id_usuario)
+            val args = arrayOf(id_usuario)
             val db: SQLiteDatabase = dbSQL.readableDatabase
-
 
 
             val cursor = db.rawQuery(
@@ -214,8 +214,6 @@ class Login : AppCompatActivity() {
 
 
     }
-
-
 
 
 }

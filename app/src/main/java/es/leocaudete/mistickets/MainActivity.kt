@@ -169,7 +169,12 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.closesission -> {
-                auth.signOut()
+                if(SharedApp.preferences.bdtype){
+                    auth.signOut()
+                }else{
+                    SharedApp.preferences.usuario_logueado=""
+                }
+                SharedApp.preferences.login=false
                 startActivity(Intent(this, Login::class.java))
                 finish()
                 true
@@ -183,7 +188,18 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.eliminar_usuario -> {
+                if(SharedApp.preferences.bdtype){
 
+                }else{
+                    val usuLogin=SharedApp.preferences.usuario_logueado
+                    // Primero Eliminamos todos los tickets de ese usuario
+                    val listaTickets=dbSQL.devuelveTickets(usuLogin)
+                    for(i in listaTickets.indices){
+                        dbSQL.deleteTicket(listaTickets[i].idTicket)
+                    }
+                    // Luego eliminamos el usuario de la BD y su carpeta local
+                    dbSQL.deleteUsuario(usuLogin)
+                }
                 true
             }
 
@@ -316,7 +332,7 @@ class MainActivity : AppCompatActivity() {
             for (ticket in tickets) {
 
                 // Cromprobamos si el ticket tiene la opcion de avisar
-                if (ticket.avisar_fin_garantia) {
+                if (ticket.avisar_fin_garantia==1) {
 
                     // Obtenemos el periodo de garantia
                     val duracionDeLaGarantia: Long =
