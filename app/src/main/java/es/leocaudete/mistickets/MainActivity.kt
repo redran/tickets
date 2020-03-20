@@ -25,6 +25,8 @@ import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.login.Login
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
+import es.leocaudete.mistickets.utilidades.FirestoreUtils
+import es.leocaudete.mistickets.utilidades.ShowMessages
 
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -48,6 +50,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var dbSQL: SQLiteDB
 
     val idUsuario = SharedApp.preferences.usuario_logueado
+
+    var gestoMensajes=ShowMessages()
+    val fbUtils=FirestoreUtils(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -188,18 +193,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.eliminar_usuario -> {
-                if(SharedApp.preferences.bdtype){
-
-                }else{
-                    val usuLogin=SharedApp.preferences.usuario_logueado
-                    // Primero Eliminamos todos los tickets de ese usuario
-                    val listaTickets=dbSQL.devuelveTickets(usuLogin)
-                    for(i in listaTickets.indices){
-                        dbSQL.deleteTicket(listaTickets[i].idTicket)
-                    }
-                    // Luego eliminamos el usuario de la BD y su carpeta local
-                    dbSQL.deleteUsuario(usuLogin)
-                }
+                gestoMensajes.showAlert("ALERTA","Va a leminar el usuario actual y todos tu tickets. Esta operación eliminará los datos de forma definitiva. ¿Está seguro?",this, {eliminaUsuarioActual()})
                 true
             }
 
@@ -374,5 +368,29 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    // Elimina el usuario actual
+    private fun eliminaUsuarioActual(){
+        if(SharedApp.preferences.bdtype){
+            val auth = FirebaseAuth.getInstance() // Usuario autentificado
+            val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
+            fbUtils.borradoCompletoUsuario(userID)
+
+        }else{
+            // Elimina el usuario SQLite
+            val usuLogin=SharedApp.preferences.usuario_logueado
+            // Primero Eliminamos todos los tickets de ese usuario
+            val listaTickets=dbSQL.devuelveTickets(usuLogin)
+            for(i in listaTickets.indices){
+                dbSQL.deleteTicket(listaTickets[i].idTicket)
+            }
+            // Luego eliminamos el usuario de la BD y su carpeta local
+            dbSQL.deleteUsuario(usuLogin)
+
+            SharedApp.preferences.usuario_logueado = ""
+            SharedApp.preferences.login=false
+            startActivity(Intent(this, Login::class.java))
+        }
+
+    }
 
 }

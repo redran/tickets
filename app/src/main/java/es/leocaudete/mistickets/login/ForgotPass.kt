@@ -37,8 +37,10 @@ class ForgotPass : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         if(SharedApp.preferences.bdtype){
+            ed_email.hint=getString(R.string.ed_email)
            ed_pin.visibility=View.GONE
         }else{
+            ed_email.hint=getString(R.string.ed_user)
             ed_pin.visibility=View.VISIBLE
         }
     }

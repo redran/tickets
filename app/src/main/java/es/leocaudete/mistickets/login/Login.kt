@@ -15,7 +15,10 @@ import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.ShowMessages
+import kotlinx.android.synthetic.main.activity_registro.*
 import kotlinx.android.synthetic.main.login_activity.*
+import kotlinx.android.synthetic.main.login_activity.ed_password
+import kotlinx.android.synthetic.main.login_activity.progressBar
 
 
 /**
@@ -70,7 +73,7 @@ class Login : AppCompatActivity() {
             }
             // Lo ponemos solo aqui porque si recuerda el usuario nunca va a mostrar la activity
             cb_recordar.isChecked = false
-            swbd.isChecked = dbcloud
+            swbd.isChecked = true
             cambiaEstado()
         }
 
@@ -90,9 +93,11 @@ class Login : AppCompatActivity() {
     fun cambiaEstado() {
         SharedApp.preferences.bdtype = swbd.isChecked
         if (swbd.isChecked) {
+            ed_user.hint = getString(R.string.ed_email)
             online.setTextColor(getColor(R.color.colorPrimary))
             offline.setTextColor(getColor(R.color.colorAccent))
         } else {
+            ed_user.hint = getString(R.string.ed_user)
             offline.setTextColor(getColor(R.color.colorPrimary))
             online.setTextColor(getColor(R.color.colorAccent))
         }

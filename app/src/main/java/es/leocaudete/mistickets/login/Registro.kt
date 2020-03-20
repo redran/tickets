@@ -3,7 +3,9 @@ package es.leocaudete.mistickets.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
+import android.util.Patterns
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -34,21 +36,24 @@ class Registro : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
 
-        // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
-        dbSQL = SQLiteDB(this, null)
-
-        database = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
-        dbReference = database.collection("User")
-
-
         // Boton atras
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        // Si usamos cloud
         if(SharedApp.preferences.bdtype){
+
+            ed_email.hint=getString(R.string.ed_email)
+            ed_email.inputType=InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            database = FirebaseFirestore.getInstance()
+            auth = FirebaseAuth.getInstance()
+            dbReference = database.collection("User")
             ed_pin.visibility=View.GONE
         }else{
+            ed_email.hint=getString(R.string.ed_user)
+            ed_email.inputType=InputType.TYPE_CLASS_TEXT
+            // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD SQLite
+            dbSQL = SQLiteDB(this, null)
             ed_pin.visibility=View.VISIBLE
         }
 
@@ -94,14 +99,7 @@ class Registro : AppCompatActivity() {
         if (!TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(apellidos) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             // Camino A Registro de Usuario Firebase
             if(SharedApp.preferences.bdtype){
-
-                // Ahora compruebo que el usuario no exista en local, si exite le aviso que ya existe en local y que se va a clonar el local en la nube
-                if(dbSQL.buscaUsuario(email)){
-                    gestorMensajes.showAlert("Información","Se ha encontrado este email en la base de datos local. Elija Aceptar para clonar " +
-                            "el usuario local en la nube o Cancelar para cambiar el email", this, { addUserByEmailInFirebase(email,dbSQL.passUsuario(email),true)})
-                }else{
-                    addUserByEmailInFirebase(email,password,false)
-                }
+                addUserByEmailInFirebase()
             }else{ // Camino B Registro de Usuraio Firebase
                 val pin=Integer.parseInt(ed_pin.text.toString())
                 usuario.pin_de_seguridad=pin
@@ -130,55 +128,52 @@ class Registro : AppCompatActivity() {
         }
     }
 
-    private fun addUserByEmailInFirebase(email:String, password:String, clonado:Boolean){
-        progressBar.visibility = View.VISIBLE
-        auth.createUserWithEmailAndPassword(email,password)
-            .addOnCompleteListener(this){
-                    task ->
+    // Crea un nuevo usuario en Firebase a partir del email y un password
+    private fun addUserByEmailInFirebase() {
 
-                if(task.isComplete){
-                    val user:FirebaseUser?=auth.currentUser
-                    verifyEmail(user)
+        val email = ed_email.text.toString()
+        val password = ed_password.text.toString()
 
-                    // Dentro de User creamos otro documeto con el nombre del uid de Usuario que acaba de asignar
-                    // el uid es creado a partir del password y la contraseña
-                    var userBD:DocumentReference = dbReference.document(user!!.uid)
+        if(Patterns.EMAIL_ADDRESS.matcher(ed_email.text).matches()){
+            // Verificacion particular de la longitud del password que Firebase obliga a que no sea menor que 6
+            if(password.length>=6){
+                progressBar.visibility = View.VISIBLE
+                auth.createUserWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(this){ task ->
+                        if(task.isSuccessful){
+                            val user= auth.currentUser
+                            verifyEmail(user)
 
+                            // Dentro de User creamos otro documeto con el nombre del uid de Usuario que acaba de asignar
+                            // el uid es creado a partir del password y la contraseña
+                            var userBD:DocumentReference =dbReference.document(user!!.uid)
 
-                    // añadimos el resto de datos del usuario o bien con un hashMap o con un modelo
-                    val usuario = hashMapOf(
+                            // añadimos el resto de datos del usuario o bien con un hashMap o con un modelo
+                            val usuario = hashMapOf(
+                                "nombre" to ed_nombre.text.toString(),
+                                "apellidos" to ed_apellidos.text.toString()
+                            )
+                            userBD.set(usuario)
+                            action()
+                        }
+                    }.addOnFailureListener(this){
+                        gestorMensajes.showActionOneButton("ERROR","No se ha podido registrar el nuevo usuario. Intentelo más tarde", this,{action()})
+                    }
 
-                        "nombre" to ed_nombre.text.toString(),
-                        "apellidos" to ed_apellidos.text.toString()
-                    )
-
-                    // Añadimos usuario en Firebase
-                    userBD.set(usuario)
-
-                    // Además de crear el usuario en la nube, lo creamos en Sqlite
-                    val usuarioSQlite = Usuario()
-                    usuarioSQlite.id_usuario_firebase = user!!.uid
-                    usuarioSQlite.email = email
-                    usuarioSQlite.password = password
-                    usuarioSQlite.nombre = ed_nombre.text.toString()
-                    usuarioSQlite.apellidos = ed_apellidos.text.toString()
-
-                    dbSQL.addUser(usuarioSQlite)
-
-                    action(clonado)
-                }
+            }else{
+                Toast.makeText(this, "El campo password no puede tener menos de 6 caracteres", Toast.LENGTH_LONG).show()
             }
-    }
-    private fun action(clonado:Boolean){
-        if(clonado){
-            gestorMensajes.showActionOneButton("Información", "El usuario ha sido clonado, recuerde que el password es el mismo que tiene el usuario local", this, {startActivity(Intent(this, Login::class.java))})
-        }
-        else
-        {
-            startActivity(Intent(this, Login::class.java))
+        }else{
+            Toast.makeText(this, "La dirección de email no parece válida", Toast.LENGTH_LONG).show()
         }
 
+
+
     }
+    private fun action(){
+        startActivity(Intent(this,Login::class.java))
+    }
+
 
     private fun verifyEmail(user:FirebaseUser?){
         user?.sendEmailVerification()
