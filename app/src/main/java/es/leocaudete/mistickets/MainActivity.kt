@@ -25,7 +25,7 @@ import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.login.Login
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
-import es.leocaudete.mistickets.utilidades.FirestoreUtils
+import es.leocaudete.mistickets.dao.FirestoreDB
 import es.leocaudete.mistickets.utilidades.ShowMessages
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
 
     val idUsuario = SharedApp.preferences.usuario_logueado
 
-    var gestoMensajes=ShowMessages()
-    val fbUtils=FirestoreUtils(this)
+    var gestoMensajes = ShowMessages()
+    val fbUtils = FirestoreDB(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,11 +124,11 @@ class MainActivity : AppCompatActivity() {
                 }
         } else {
             // Off-Line. Se carga de SQLite
-            var ticketsUsu=dbSQL.devuelveTickets(SharedApp.preferences.usuario_logueado)
-            if((ticketsUsu).size>0){
-               for(i in ticketsUsu.indices){
-                   tickets.add(ticketsUsu[i])
-               }
+            var ticketsUsu = dbSQL.devuelveTickets(SharedApp.preferences.usuario_logueado)
+            if ((ticketsUsu).size > 0) {
+                for (i in ticketsUsu.indices) {
+                    tickets.add(ticketsUsu[i])
+                }
             }
             setUpRecyclerView(reqTickets)
             revisaGarantias()
@@ -174,12 +174,15 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.closesission -> {
-                if(SharedApp.preferences.bdtype){
+                if (SharedApp.preferences.bdtype) {
                     auth.signOut()
-                }else{
-                    SharedApp.preferences.usuario_logueado=""
+                } else {
+                    if(auth!=null){
+                        auth.signOut()
+                    }
+                    SharedApp.preferences.usuario_logueado = ""
                 }
-                SharedApp.preferences.login=false
+                SharedApp.preferences.login = false
                 startActivity(Intent(this, Login::class.java))
                 finish()
                 true
@@ -188,12 +191,21 @@ class MainActivity : AppCompatActivity() {
                 buscar()
                 true
             }
+            R.id.sycronizar -> {
+                startActivity(Intent(this, Syncronizar::class.java))
+                finish()
+                true
+            }
             R.id.findticketicon -> {
                 buscar()
                 true
             }
             R.id.eliminar_usuario -> {
-                gestoMensajes.showAlert("ALERTA","Va a leminar el usuario actual y todos tu tickets. Esta operación eliminará los datos de forma definitiva. ¿Está seguro?",this, {eliminaUsuarioActual()})
+                gestoMensajes.showAlert(
+                    "ALERTA",
+                    "Va a leminar el usuario actual y todos tu tickets. Esta operación eliminará los datos de forma definitiva. ¿Está seguro?",
+                    this,
+                    { eliminaUsuarioActual() })
                 true
             }
 
@@ -326,7 +338,7 @@ class MainActivity : AppCompatActivity() {
             for (ticket in tickets) {
 
                 // Cromprobamos si el ticket tiene la opcion de avisar
-                if (ticket.avisar_fin_garantia==1) {
+                if (ticket.avisar_fin_garantia == 1) {
 
                     // Obtenemos el periodo de garantia
                     val duracionDeLaGarantia: Long =
@@ -369,28 +381,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Elimina el usuario actual
-    private fun eliminaUsuarioActual(){
-        if(SharedApp.preferences.bdtype){
+    private fun eliminaUsuarioActual() {
+        if (SharedApp.preferences.bdtype) {
             val auth = FirebaseAuth.getInstance() // Usuario autentificado
             val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
             fbUtils.borradoCompletoUsuario(userID)
 
-        }else{
+        } else {
             // Elimina el usuario SQLite
-            val usuLogin=SharedApp.preferences.usuario_logueado
+            val usuLogin = SharedApp.preferences.usuario_logueado
             // Primero Eliminamos todos los tickets de ese usuario
-            val listaTickets=dbSQL.devuelveTickets(usuLogin)
-            for(i in listaTickets.indices){
+            val listaTickets = dbSQL.devuelveTickets(usuLogin)
+            for (i in listaTickets.indices) {
                 dbSQL.deleteTicket(listaTickets[i].idTicket)
             }
             // Luego eliminamos el usuario de la BD y su carpeta local
             dbSQL.deleteUsuario(usuLogin)
 
             SharedApp.preferences.usuario_logueado = ""
-            SharedApp.preferences.login=false
+            SharedApp.preferences.login = false
             startActivity(Intent(this, Login::class.java))
         }
 
     }
+
 
 }

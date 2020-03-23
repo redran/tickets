@@ -106,7 +106,7 @@ class Registro : AppCompatActivity() {
                 // Aqui comprobaria y mostraria el campo PIN
                 if(pin>0){
                     if(dbSQL.buscaUsuario(email)){
-                        gestorMensajes.showAlert("Información","Se ha encontrado este email en la base de datos local. Elija otro email", this, { ed_email.text.clear() })
+                        gestorMensajes.showAlert("Información","Usuario ya registrado. Elija otro usuario", this, { ed_email.text.clear() })
                     }else{
                         val insertados = dbSQL.addUser(usuario)
                         if(insertados<0){

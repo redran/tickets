@@ -15,7 +15,6 @@ import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.ShowMessages
-import kotlinx.android.synthetic.main.activity_registro.*
 import kotlinx.android.synthetic.main.login_activity.*
 import kotlinx.android.synthetic.main.login_activity.ed_password
 import kotlinx.android.synthetic.main.login_activity.progressBar
@@ -32,7 +31,7 @@ class Login : AppCompatActivity() {
 
     private val TAG = "DocSnippets"
     var tickets = mutableListOf<Ticket>() // va a lamacenar todos los tickets
-    var gestorMensages = ShowMessages()
+    var gestorMensajes = ShowMessages()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,7 +158,7 @@ class Login : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
         } else {
             // En este punto tendríamos que verificar si la fecha de ingreso y la actual tienen 1 mes de diferencia y si la tienen eliminar la cuenta de firebase
-            gestorMensages.showAlertOneButton(
+            gestorMensajes.showAlertOneButton(
                 "Alerta",
                 "Tienes que aceptar el email de verifiación que se envió a tu correo electrónico",
                 this
@@ -184,12 +183,14 @@ class Login : AppCompatActivity() {
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
-                gestorMensages.showAlertOneButton("ERROR", "La contraseña no es correcta", this)
+                gestorMensajes.showAlertOneButton("ERROR", "La contraseña no es correcta", this)
             }
         } else {
-            gestorMensages.showAlertOneButton("ERROR", "El usuario no es correcto", this)
+            gestorMensajes.showAlertOneButton("ERROR", "El usuario no es correcto", this)
         }
     }
+
+
 
     // Este metodo comprueba si hay datos en SQLite
     private fun compruebaDatosOffline() {

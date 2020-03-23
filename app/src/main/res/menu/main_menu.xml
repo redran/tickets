@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:title="@string/menuListado">
         <menu>
-            <item android:title="@string/menuTodos"
-                android:id="@+id/todo"/>
-            <item android:title="@string/menuCaduca"
-                android:id="@+id/caducan"/>
+            <item
+                android:id="@+id/todo"
+                android:title="@string/menuTodos" />
+            <item
+                android:id="@+id/caducan"
+                android:title="@string/menuCaduca" />
         </menu>
     </item>
 
-    <item android:title="@string/menuNuevo"
-        android:id="@+id/newticket"/>
-    <item android:title="@string/menuBuscar"
-        android:id="@+id/findticket"/>
+    <item
+        android:id="@+id/newticket"
+        android:title="@string/menuNuevo" />
+    <item
+        android:id="@+id/findticket"
+        android:title="@string/menuBuscar" />
+    <item
+        android:id="@+id/sycronizar"
+        android:title="Sycronizar" />
+    <item
+        android:id="@+id/eliminar_usuario"
+        android:title="@string/borrar_usuario" />
 
-    <item android:title="@string/borrar_usuario"
-        android:id="@+id/eliminar_usuario"/>
-
-    <item android:title="@string/menuCerrar"
-        android:id="@+id/closesission"/>
+    <item
+        android:id="@+id/closesission"
+        android:title="@string/menuCerrar" />
 
 
-    <item android:title="@string/menuNuevo"
+    <item
+        android:id="@+id/newticketicon"
         android:icon="@android:drawable/ic_menu_add"
-        app:showAsAction="ifRoom"
-        android:id="@+id/newticketicon"/>
-    <item android:title="@string/menuBuscar"
+        android:title="@string/menuNuevo"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/findticketicon"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="ifRoom"
-        android:id="@+id/findticketicon"/>
+        android:title="@string/menuBuscar"
+        app:showAsAction="ifRoom" />
 </menu>

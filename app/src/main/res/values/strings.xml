@@ -73,6 +73,15 @@
     <string name="menuCerrar">Cerrar Sesion</string>
     <string name="borrar_usuario">Eliminar Usuario</string>
 
+    <!-- Syscronizar -->
+    <string name="syncro_email">Usuario Cloud</string>
+    <string name="syncro_user">Usuario Local</string>
+    <string name="syncro_pass">Password</string>
+    <string name="syncro_des_cloud">Introducza los datos de la cuenta cloud con la que quiere sycronizar</string>
+    <string name="syncro_des_local">Introducza los datos de la cuenta local con la que quiere sycronizar</string>
+    <string name="syncro_syncronizar">Syncronizar</string>
+    <string name="syncro_cancelar">Calcelar</string>
+
     <!--lista de privincias en España -->
     <string-array name="provincias">
         <item>Provincia</item>

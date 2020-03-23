@@ -279,30 +279,6 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return resultado
     }
 
-    /**
-     * Este metodo devuelve la contraseña para mostraseña en caso de haber olvidado la contraseña
-     */
-    fun passUsuario(usuario: String): String {
-
-        var resultado: String = ""
-
-        val args = arrayOf(usuario)
-        val db = this.readableDatabase
-
-        val cursor = db.rawQuery(
-            " SELECT ${PASSWORD_USUARIO} FROM ${TABLA_USUARIO} WHERE ${EMAIL_USUARIO}=?",
-            args
-        )
-
-        if (cursor.moveToFirst()) {
-            resultado = cursor.getString(0)
-        }
-
-        cursor.close()
-        db.close()
-
-        return resultado
-    }
 
     /**
      * Busca un usuario por su email y devuelve su id
@@ -330,7 +306,7 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     /**
-     * valida si el PIN introducido es correcto
+     * valida si el PIN introducido es correcto y devuelve la contraseña
      */
     fun validaPin(pin: Int): String {
         var resultado = ""

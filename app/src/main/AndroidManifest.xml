@@ -19,33 +19,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Busquedas"/>
+        <activity android:name=".Syncronizar"></activity>
+        <activity android:name=".Busquedas" />
         <activity
             android:name=".VisorTicket"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".VisorFotos" />
-        <activity android:name=".GestorFotos"
-            android:configChanges="screenSize|orientation"/>
+        <activity
+            android:name=".GestorFotos"
+            android:configChanges="screenSize|orientation" />
         <activity
             android:name=".NuevoTicket"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="screenSize|orientation"/>
+            android:configChanges="screenSize|orientation"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".login.ForgotPass" />
-        <activity android:name=".login.Login"
+        <activity
+            android:name=".login.Login"
             android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.Registro"
-            android:configChanges="screenSize|orientation"/>
+        <activity
+            android:name=".login.Registro"
+            android:configChanges="screenSize|orientation" />
         <activity
             android:name=".MainActivity"
+            android:configChanges="screenSize|orientation"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="screenSize|orientation"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
