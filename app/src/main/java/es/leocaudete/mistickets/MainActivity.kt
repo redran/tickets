@@ -27,6 +27,7 @@ import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.dao.FirestoreDB
 import es.leocaudete.mistickets.utilidades.ShowMessages
+import es.leocaudete.mistickets.utilidades.Utilidades
 
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     var gestoMensajes = ShowMessages()
     val fbUtils = FirestoreDB(this)
+    val utils=Utilidades()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     // Anulamos la opción de volver a tras a través del botón del móvil
     override fun onBackPressed() {
         //
@@ -75,10 +78,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpRecyclerView(reqTickets: MutableList<Ticket>) {
 
+        // ordenamos la lista por fecha de compra
+        // esto nos devuelve un List, al pasarlo al adapter hay que tranformarlo otra vez en MutableList
+        var listaParam = reqTickets.sortedByDescending { x ->  LocalDate.parse(x.fecha_de_compra, DateTimeFormatter.ofPattern("dd-MM-yyyy"))}
 
         listadoTickets.setHasFixedSize(true)
         listadoTickets.layoutManager = LinearLayoutManager(this)
-        myAdapter.RecyclerAdapter(reqTickets, this)
+        myAdapter.RecyclerAdapter(listaParam.toMutableList(), this)
         listadoTickets.adapter = myAdapter
 
         pbCargando.visibility = View.INVISIBLE
@@ -175,6 +181,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.closesission -> {
                 if (SharedApp.preferences.bdtype) {
+                    utils.delRecFileAndDir(storageLocalDir + "/" + auth.currentUser?.uid.toString())
                     auth.signOut()
                 } else {
                     if(auth!=null){

@@ -3,6 +3,7 @@ package es.leocaudete.mistickets
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
@@ -15,30 +16,33 @@ import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_visor_fotos.*
 import java.io.File
+
 /**
  * @author Leonardo Caudete Palau - 2º DAM
  */
 class VisorFotos : AppCompatActivity() {
     lateinit var storageDir: String
     private lateinit var auth: FirebaseAuth
-    var pDownX=0
-    var pUpX=0
+    var pDownX = 0
+    var pUpX = 0
 
 
-    var unTicket= Ticket()
-    var fotoactual=1
+    var unTicket = Ticket()
+    var fotoactual = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_visor_fotos)
 
-        auth= FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         unTicket = intent.getSerializableExtra("unTicket") as Ticket
 
-        if(SharedApp.preferences.bdtype){
-            storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
-        }else{
-            storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
+        if (SharedApp.preferences.bdtype) {
+            storageDir =
+                getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+        } else {
+            storageDir =
+                getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
         }
 
 
@@ -48,39 +52,37 @@ class VisorFotos : AppCompatActivity() {
         imgFoto.setOnTouchListener { v, event ->
 
 
-
             val action = event.action
 
-            when(action){
+            when (action) {
 
-                MotionEvent.ACTION_DOWN ->{
-                    pDownX= event.x.toInt()
+                MotionEvent.ACTION_DOWN -> {
+                    pDownX = event.x.toInt()
 
                 }
-                MotionEvent.ACTION_MOVE -> { }
+                MotionEvent.ACTION_MOVE -> {
+                }
 
                 MotionEvent.ACTION_UP -> {
-                    pUpX= event.x.toInt()
-                    if(pUpX!=pDownX){
+                    pUpX = event.x.toInt()
+                    if (pUpX != pDownX) {
                         // Si se ha movido a la derecha
-                        if(pUpX<pDownX)
-                        {
-                            if(fotoactual<4)
+                        if (pUpX < pDownX) {
+                            if (fotoactual < 4)
                                 fotoactual++
                         }
 
                         // si se ha movido a la izquierda
-                        if(pUpX>pDownX)
-                        {
-                            if(fotoactual>1)
+                        if (pUpX > pDownX) {
+                            if (fotoactual > 1)
                                 fotoactual--
                         }
 
-                        when(fotoactual){
-                            1->cargaFoto(unTicket.foto1)
-                            2->cargaFoto(unTicket.foto2)
-                            3->cargaFoto(unTicket.foto3)
-                            4->cargaFoto(unTicket.foto4)
+                        when (fotoactual) {
+                            1 -> cargaFoto(unTicket.foto1)
+                            2 -> cargaFoto(unTicket.foto2)
+                            3 -> cargaFoto(unTicket.foto3)
+                            4 -> cargaFoto(unTicket.foto4)
                         }
 
                     }
@@ -90,7 +92,8 @@ class VisorFotos : AppCompatActivity() {
 
                 }
 
-                else ->{
+
+                else -> {
 
                 }
             }
@@ -101,12 +104,12 @@ class VisorFotos : AppCompatActivity() {
         btn1.setBackgroundColor(Color.RED)
     }
 
-    fun cargaFoto(foto:String?){
-        if(foto!=null && foto!="null"){
-            if(SharedApp.preferences.bdtype){
+    fun cargaFoto(foto: String?) {
+        if (foto != null && foto != "null") {
+            if (SharedApp.preferences.bdtype) {
                 var storageRef = FirebaseStorage.getInstance().reference
 
-                var rutaFoto=auth.currentUser?.uid.toString()+"/"+  foto
+                var rutaFoto = auth.currentUser?.uid.toString() + "/" + foto
                 val pathReference = storageRef.child(rutaFoto)
 
                 pathReference.downloadUrl.addOnSuccessListener {
@@ -115,17 +118,16 @@ class VisorFotos : AppCompatActivity() {
                         //.resize(400,800)
                         .into(imgFoto)
                 }
-            }else{
+            } else {
                 imgFoto.setImageBitmap(BitmapFactory.decodeFile("$storageDir/$foto"))
             }
 
 
-        }
-        else{
+        } else {
             imgFoto.setImageResource(R.drawable.googleg_disabled_color_18)
-         //   imgFoto.setBackgroundResource(R.drawable.googleg_disabled_color_18)
+            //   imgFoto.setBackgroundResource(R.drawable.googleg_disabled_color_18)
         }
-        when(fotoactual) {
+        when (fotoactual) {
             1 -> {
                 btn1.setBackgroundColor(Color.RED)
                 btn2.setBackgroundColor(Color.GRAY)
@@ -157,10 +159,39 @@ class VisorFotos : AppCompatActivity() {
 
     fun volver(view: View) {
 
-        var intent=Intent(this, VisorTicket::class.java).apply {
+        var intent = Intent(this, VisorTicket::class.java).apply {
             putExtra("TicketVisor", unTicket)
         }
         startActivity(intent)
         finish()
+    }
+
+    fun abrir(view: View) {
+
+        when (fotoactual) {
+
+            1 -> if (unTicket.foto1 != null) {
+                abrirEnGaleria(Uri.parse(storageDir + "/" + unTicket.foto1))
+            }
+            2 -> if (unTicket.foto2 != null) {
+                abrirEnGaleria(Uri.parse(storageDir + "/" + unTicket.foto2))
+            }
+            3 -> if (unTicket.foto3 != null) {
+                abrirEnGaleria(Uri.parse(storageDir + "/" + unTicket.foto3))
+            }
+            4 -> if (unTicket.foto4 != null) {
+                abrirEnGaleria(Uri.parse(storageDir + "/" + unTicket.foto4))
+            }
+        }
+    }
+
+    fun abrirEnGaleria(foto: Uri) {
+
+        var intent = Intent().also {
+            it.action = Intent.ACTION_VIEW
+        }
+        intent.setDataAndType(foto, "image/*")
+        startActivity(intent)
+
     }
 }

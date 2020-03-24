@@ -46,6 +46,9 @@
     <string name="foto4">Foto 4</string>
     <!-- Visor de Imagenes -->
     <string name="cerrar">Cerrar</string>
+    <string name="anterior"> Ant </string>
+    <string name="siguiente"> Sig </string>
+    <string name="abrir">Abrir</string>
     <!-- Visor de Tickets -->
     <string name="ubicacion">Provincia/Localidad</string>
     <string name="pergarantia">Período de garantía</string>

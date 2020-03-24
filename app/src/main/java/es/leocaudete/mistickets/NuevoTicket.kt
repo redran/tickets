@@ -200,6 +200,7 @@ class NuevoTicket : AppCompatActivity() {
         spinner_garantia.adapter = adapterGarantia
     }
 
+
     // Anulamos la opción de volver a tras a través del botón del móvil
     override fun onBackPressed() {
         //
@@ -257,7 +258,7 @@ class NuevoTicket : AppCompatActivity() {
                 /**
                  * Con firebase se le pasa un ticket
                  * Si es Nuevo habra creado un id_ticket al pulsar sobre nuevoTicket
-                 * Si es Aatualizacion se pasa elk ticket con el mismo id y lo chafa
+                 * Si es Aatualizacion se pasa el ticket con el mismo id y lo chafa
                  */
                 val dbRef = FirebaseFirestore.getInstance()
                 grabaFoto(1, unTicket.foto1, false)
@@ -268,6 +269,7 @@ class NuevoTicket : AppCompatActivity() {
                     .collection("Tickets").document(unTicket.idTicket)
                     .set(unTicket)
                     .addOnSuccessListener {
+
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }

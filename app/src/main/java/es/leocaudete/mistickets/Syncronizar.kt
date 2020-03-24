@@ -78,7 +78,7 @@ class Syncronizar : AppCompatActivity() {
                             }
                             gestorMensajes.showAlert(
                                 "SYNCRONIZACION",
-                                "Se van a actualizar la lista de tickets con los datos de la cuenta de CLOUD. ¿Está seguro?",
+                                "Se van a actualizar la lista de tickets con los datos de la cuenta Local. ¿Está seguro?",
                                 this,
                                 {syncWithLocal(dbSQL.buscaIdUsuario(user),listaCloud) })
 
@@ -182,7 +182,7 @@ class Syncronizar : AppCompatActivity() {
                 }
 
                 if(encontrado>=0){
-                    if(listaLocal[encontrado].fecha_modificacion.toLong() < listaCloud[i].idTicket.toLong()){
+                    if(listaLocal[encontrado].fecha_modificacion.toLong() < listaCloud[i].fecha_modificacion.toLong()){
                         sqLiteBD.updateTicket(ticket)
                         //Tambien tenemos que bajarnos las fotos
                         syncWithCloudFoto(ticket,userId)
