@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="@string/tv_tienda"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgPortada" />
@@ -55,11 +55,10 @@
         android:layout_width="match_parent"
         android:layout_height="19dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:text="TextView"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloTienda"
-        android:textColor="@color/colorPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/tituloTienda" />
 
 
     <TextView
@@ -67,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/tv_descripcion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTienda" />
@@ -77,11 +76,10 @@
         android:layout_width="match_parent"
         android:layout_height="19dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:text="Texto"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloDescripcion"
-        android:textColor="@color/colorPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/tituloDescripcion" />
 
 
     <TextView
@@ -89,7 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/fecha"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDescripcion" />
@@ -99,18 +97,17 @@
         android:layout_width="match_parent"
         android:layout_height="19dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:text="TextView"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloFecha"
-        android:textColor="@color/colorPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/tituloFecha" />
 
     <TextView
         android:id="@+id/tituloUbicacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/ubicacion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFecha" />
@@ -120,18 +117,17 @@
         android:layout_width="match_parent"
         android:layout_height="19dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:text="TextView"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloUbicacion"
-        android:textColor="@color/colorPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/tituloUbicacion" />
 
     <TextView
         android:id="@+id/tituloDireccion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/direccion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvUbicacion" />
@@ -141,18 +137,17 @@
         android:layout_width="match_parent"
         android:layout_height="19dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:text="TextView"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloDireccion"
-        android:textColor="@color/colorPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/tituloDireccion" />
 
     <TextView
         android:id="@+id/tituloGarantia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/pergarantia"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDireccion" />
@@ -162,9 +157,48 @@
         android:layout_width="match_parent"
         android:layout_height="19dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:text="TextView"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloGarantia"
-        android:textColor="@color/colorPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/tituloGarantia" />
+
+    <TextView
+        android:id="@+id/tituloCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/categoria"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvGarantia" />
+
+    <TextView
+        android:id="@+id/tvCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:layout_marginStart="21dp"
+        android:text="TextView"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tituloCategoria" />
+
+    <TextView
+        android:id="@+id/tituloPrecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/precio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
+
+    <TextView
+        android:id="@+id/tvPrecio"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:layout_marginStart="21dp"
+        android:text="TextView"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tituloPrecio" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,6 +31,10 @@ class Ticket: Serializable{
 
     var fecha_modificacion: String=""
 
+    // Añadido de 11-04-2020
+    var categoria: Int=0
+    var precio: Double=0.0
+
 
 
 }

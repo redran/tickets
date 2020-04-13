@@ -46,6 +46,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     // Tareas asincronas
     implementation "org.jetbrains.anko:anko-common:0.10.8"
+    // GPS
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    // Para las graficas de Barras
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

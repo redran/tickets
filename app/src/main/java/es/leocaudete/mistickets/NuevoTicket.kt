@@ -119,7 +119,7 @@ class NuevoTicket : AppCompatActivity() {
             enEdicion = true
             rellenaCampos()
             btn_aceptar.text = getString(R.string.update)
-
+            //Descargamos las fotos en local para que no nos de error al actualizar
         }
 
         // Ruta de acceso al directorio local donde se guardan las imagenes
@@ -156,12 +156,15 @@ class NuevoTicket : AppCompatActivity() {
         text_fecha.setText(unTicket.fecha_de_compra)
 
         this.spinner_provincias.setSelection(unTicket.provincia, false)
+        this.spinner_categorias.setSelection(unTicket.categoria, false)
         this.spinner_garantia.setSelection(unTicket.duracion_garantia, false)
 
         rd_annos.isChecked = unTicket.periodo_garantia == 0
         rd_meses.isChecked = unTicket.periodo_garantia == 1
 
         check_aviso.isChecked = unTicket.avisar_fin_garantia == 1
+
+        etPrecio.setText(unTicket.precio.toString())
 
 
     }
@@ -198,6 +201,22 @@ class NuevoTicket : AppCompatActivity() {
         )
 
         spinner_garantia.adapter = adapterGarantia
+
+
+        // Rellenamos el Spinner de Categorias
+        val adapterCategorias = ArrayAdapter.createFromResource(
+            this,
+            R.array.categorias,
+            android.R.layout.simple_spinner_item
+        )
+
+        adapterCategorias.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        )
+
+        spinner_categorias.adapter = adapterCategorias
+
+
     }
 
 
@@ -337,15 +356,22 @@ class NuevoTicket : AppCompatActivity() {
 
         // Guardamos en la nube, en SQLite se guarda el fichero nada mas realizar la foto
         if (fotoTicket != null) {
-            if (!local) {
-                var storageRef = FirebaseStorage.getInstance().reference
-                var riverRef =
-                    storageRef.child(auth.currentUser?.uid.toString() + "/" + unTicket.idTicket + "_foto" + numFoto + ".jpg")
+            // Ahora tenemos que comprobar si existe en local ya que hemos podido entrar en Edición y no modificar
+            // las fotos y entonces este directorio esta vacio porque ni se ham creado ni se han descargado
+            var fotoLocal = File("$storageLocalDir/$strFoto")
+            if(fotoLocal.exists()){
+                if (!local) {
+                    var storageRef = FirebaseStorage.getInstance().reference
+                    var riverRef =
+                        storageRef.child(auth.currentUser?.uid.toString() + "/" + unTicket.idTicket + "_foto" + numFoto + ".jpg")
 
-                // var uri=Uri.parse(storageLocalDir + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg")
-                var uri = Uri.fromFile(File("$storageLocalDir/$strFoto"))
-                var uploadTask = riverRef.putFile(uri)
+                    // var uri=Uri.parse(storageLocalDir + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg")
+                    var uri = Uri.fromFile(File("$storageLocalDir/$strFoto"))
+                    var uploadTask = riverRef.putFile(uri)
+                }
             }
+            // Si no existe, entonces estamos editando y no se ha modificado la foto
+
 
 
         }
@@ -384,6 +410,8 @@ class NuevoTicket : AppCompatActivity() {
             unTicket.avisar_fin_garantia = 0
         }
 
+        unTicket.categoria=spinner_categorias.selectedItemPosition
+
 
         // Si estamos editando tenemos que cambiar la referencia a las fotos
         if (enEdicion) {
@@ -404,6 +432,12 @@ class NuevoTicket : AppCompatActivity() {
         unTicket.fecha_modificacion = Timestamp.now()
             .seconds.toString() // Siempre guardamos la fecha de modificación para syncronizar
 
+        // Si tiene algún valor en precio se pone sino por defecto al crear el objeto se pone 0.0
+        if(!TextUtils.isEmpty(etPrecio.text)){
+            var precio = String.format("%.2f",etPrecio.text.toString().toDouble())
+            var precioCambiado=precio.replace(',','.').toDouble()
+            unTicket.precio=precioCambiado
+        }
 
     }
 
@@ -450,6 +484,24 @@ class NuevoTicket : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                             resultado = false
+                        }else{
+                            if(spinner_categorias.selectedItemPosition==0){
+                                Toast.makeText(
+                                    this,
+                                    "Debes seleccionar una categoría.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                resultado = false
+                            }else{
+                                if(TextUtils.isEmpty(etPrecio.text)){
+                                    Toast.makeText(
+                                        this,
+                                        "Introduce el precio para poder usar otras características de la App.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    resultado = false
+                                }
+                            }
                         }
                     }
                 }

@@ -20,6 +20,9 @@
         android:id="@+id/findticket"
         android:title="@string/menuBuscar" />
     <item
+        android:id="@+id/estadisticas"
+        android:title="Estadísticas"/>
+    <item
         android:id="@+id/sycronizar"
         android:title="Sycronizar" />
     <item

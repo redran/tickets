@@ -49,7 +49,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="21dp"
         android:ems="10"
         android:hint="@string/tv_tienda"
@@ -64,7 +63,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="21dp"
         android:ems="10"
         android:hint="@string/direccion"
@@ -79,7 +77,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="21dp"
         android:ems="10"
         android:hint="@string/localidad"
@@ -109,7 +106,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="80dp"
         android:clickable="false"
         android:ems="10"
@@ -126,7 +122,6 @@
         android:id="@+id/img_calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ed_localidades"
@@ -137,26 +132,26 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
         android:ems="10"
         android:hint="@string/duracion_garantia"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_fecha" />
+        app:layout_constraintBottom_toTopOf="@+id/check_aviso"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
         android:id="@+id/check_aviso"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
         android:layout_marginEnd="21dp"
+        android:layout_marginBottom="30dp"
         android:text="@string/recoradr"
+        app:layout_constraintBottom_toTopOf="@+id/btn_aceptar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rds_garantias" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:onClick="insertar"
@@ -189,11 +184,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
         android:checkedButton="@id/rd_annos"
         android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@+id/spinner_garantia"
-        app:layout_constraintTop_toBottomOf="@+id/text_fecha">
+        app:layout_constraintBottom_toTopOf="@+id/check_aviso"
+        app:layout_constraintStart_toEndOf="@+id/spinner_garantia">
 
         <RadioButton
             android:id="@+id/rd_annos"
@@ -207,6 +202,40 @@
             android:layout_height="wrap_content"
             android:text="Meses" />
     </RadioGroup>
+
+    <Spinner
+        android:id="@+id/spinner_categorias"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="21dp"
+        android:autofillHints="@string/selecciona_categoria"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_fecha" />
+
+    <EditText
+        android:id="@+id/etPrecio"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="@string/precio"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="€"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/etPrecio"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso
 import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
+import kotlinx.android.synthetic.main.activity_nuevo_ticket.*
 import kotlinx.android.synthetic.main.activity_visor_ticket.*
 import java.io.File
 
@@ -182,8 +183,10 @@ class VisorTicket : AppCompatActivity() {
             tvDireccion.text = "No especificada"
         }
 
-
+        tvCategoria.text=devuelveCategoria()
         tvGarantia.text = devuelveGarantia()
+
+        tvPrecio.text=paramTicket.precio.toString() + " €"
     }
 
     fun visorFoto(view: View) {
@@ -226,5 +229,10 @@ class VisorTicket : AppCompatActivity() {
         }
 
         return ubicacion
+    }
+
+    fun devuelveCategoria(): String{
+        val arrayCategorias = resources.getStringArray(R.array.categorias)
+        return arrayCategorias[paramTicket.categoria]
     }
 }

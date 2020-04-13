@@ -38,6 +38,8 @@
     <string name="cancelar">Cancelar</string>
     <string name="toolbarNuevoTicket">Nuevo Ticket</string>
     <string name="update">Actualizar</string>
+    <string name="selecciona_categoria">Selecciona una Categoría</string>
+    <string name="precio">Precio</string>
     <!-- Gestion de Fotos -->
     <string name="addToTicket">Guardar cambios</string>
     <string name="foto1">Foto 1</string>
@@ -49,9 +51,11 @@
     <string name="anterior"> Ant </string>
     <string name="siguiente"> Sig </string>
     <string name="abrir">Abrir</string>
+
     <!-- Visor de Tickets -->
     <string name="ubicacion">Provincia/Localidad</string>
     <string name="pergarantia">Período de garantía</string>
+    <string name="categoria">Categoría</string>
     <!-- busquedas -->
     <string name="buscar">Buscar</string>
     <string name="busqueda_descripcion">Introduza una palabra descriptiva</string>
@@ -84,6 +88,9 @@
     <string name="syncro_des_local">Introducza los datos de la cuenta local con la que quiere sycronizar</string>
     <string name="syncro_syncronizar">Syncronizar</string>
     <string name="syncro_cancelar">Calcelar</string>
+
+    <!-- Graficas -->
+    <string name="grafica">Mostrar Gráfica</string>
 
     <!--lista de privincias en España -->
     <string-array name="provincias">
@@ -142,6 +149,7 @@
         <item>Melilla</item>
     </string-array>
 
+    <!-- Array de annos permitidos para la duración de la garantia -->
     <string-array name="annos">
         <item>Garantía</item>
         <item>1</item>
@@ -154,6 +162,48 @@
         <item>8</item>
         <item>9</item>
         <item>10</item>
+    </string-array>
+
+    <!-- Array de Categorías -->
+    <string-array name="categorias">
+        <item>Selecciona una Categoría</item>
+        <item>Restauración</item>
+        <item>Alimentación</item>
+        <item>Informática</item>
+        <item>Electrodomésticos</item>
+        <item>Menaje</item>
+        <item>Deporte</item>
+        <item>Salud</item>
+        <item>Belleza</item>
+        <item>Papelería/Oficina</item>
+        <item>Mobiliario</item>
+        <item>Ropa</item>
+        <item>OCIO</item>
+        <item>Seguros</item>
+        <item>Gastos Hogar</item>
+        <item>Gastos Movilidad</item>
+        <item>Hospedaje</item>
+        <item>Otros</item>
+
+    </string-array>
+
+    <!-- Array de Meses -->
+    <string-array name="meses">
+        <item>Mes</item>
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Actubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+
+
     </string-array>
 
 </resources>

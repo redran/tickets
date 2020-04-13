@@ -26,6 +26,7 @@ import es.leocaudete.mistickets.login.Login
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.dao.FirestoreDB
+import es.leocaudete.mistickets.estadisticas.Grafica
 import es.leocaudete.mistickets.utilidades.ShowMessages
 import es.leocaudete.mistickets.utilidades.Utilidades
 
@@ -213,6 +214,18 @@ class MainActivity : AppCompatActivity() {
                     "Va a leminar el usuario actual y todos tu tickets. Esta operación eliminará los datos de forma definitiva. ¿Está seguro?",
                     this,
                     { eliminaUsuarioActual() })
+                true
+            }
+            R.id.estadisticas->{
+                // ArrayList de los tickets ordenados por fecha
+                var arrayLisTickets = ArrayList(tickets.sortedByDescending { x ->  LocalDate.parse(x.fecha_de_compra, DateTimeFormatter.ofPattern("dd-MM-yyyy"))})
+
+                val intent=Intent(this, Grafica::class.java).apply {
+                    putExtra("tickets", arrayLisTickets)
+                }
+                startActivity(intent)
+
+                finish()
                 true
             }
 

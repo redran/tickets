@@ -196,10 +196,8 @@ class Syncronizar : AppCompatActivity() {
                     }
                     syncWithCloudFoto(ticket,userId)
                 }
-
-                gestorMensajes.showActionOneButton("INFORMACION","Se ha terminado el proceso de syncronización",this, {lanzaMain()})
-
             }
+            gestorMensajes.showActionOneButton("INFORMACION","Se ha terminado el proceso de syncronización",this, {lanzaMain()})
         }else{
             gestorMensajes.showAlertOneButton(
                 "INFORMACION",

@@ -24,7 +24,7 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     var utilidades = Utilidades()
 
     companion object {
-        val DATABASE_VERSION = 1
+        val DATABASE_VERSION = 2
         val DATABASE_NAME = "MisTickets.db"
 
         /** Nombre de la tabla **/
@@ -60,6 +60,10 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val AVISAR_FIN_GARANTIA = "avisar_fin_garantia"
         val FECHA_MODIFICACION = "fecha_modificacion"
 
+        // Updates 11-04-2020
+        val CATEGORIA = "categoria"
+        val PRECIO = "precio"
+
     }
 
     // Cea las tablas de la base de datos si no existen
@@ -92,7 +96,12 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                         "${FOTO2} TEXT, " +
                         "${FOTO3} TEXT, " +
                         "${FOTO4} TEXT, " +
-                        "${FECHA_MODIFICACION} TEXT )"
+                        "${FECHA_MODIFICACION} TEXT, " +
+                        // Estos campos se añaden para los que hagan la instalación nueva desde la version 2
+                        // Los que ya tengan instalada la app con la version 1 haran el Upgrade
+                        "${CATEGORIA} INTEGER DEFAULT 1, " +
+                        "${PRECIO} REAL DEFAULT 0.0 )"
+
             db!!.execSQL(createTableTicket)
         } catch (e: SQLiteException) {
             Log.e("SQLite(OnCreate)", e.message.toString())
@@ -100,8 +109,18 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     // Actualiza el esquema de la base de datos
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        // ACtualiza el esquema de la tabla si la versión de SQLite cambia
+        if (newVersion > oldVersion) {
+            when(newVersion){
+                2->  {
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${CATEGORIA} INTEGER DEFAULT 1")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${PRECIO} REAL DEFAULT 0.0")
+                }
+
+
+            }
+        }
     }
 
     override fun onOpen(db: SQLiteDatabase?) {
@@ -162,6 +181,8 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         data.put(FOTO3, ticket.foto3)
         data.put(FOTO4, ticket.foto4)
         data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
+        data.put(CATEGORIA,ticket.categoria)
+        data.put(PRECIO,ticket.precio)
 
         //Abrimos la BD en modo escritura
         val db = this.writableDatabase
@@ -221,6 +242,8 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         data.put(FOTO3, ticket.foto3)
         data.put(FOTO4, ticket.foto4)
         data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
+        data.put(CATEGORIA, ticket.categoria)
+        data.put(PRECIO,ticket.precio)
 
         val db = this.writableDatabase
         val updateados=db.update(TABLA_TICKETS, data, "$ID_TICKET=?", args)
@@ -373,6 +396,8 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                     ticket.foto3=cursor.getString(13)
                     ticket.foto4=cursor.getString(14)
                     ticket.fecha_modificacion=cursor.getString(15)
+                    ticket.categoria=cursor.getInt(16) // Esta columna es una actualización que se añade a partir de la version 2
+                    ticket.precio=cursor.getDouble(17)
 
 
                     tickets.add(ticket)
