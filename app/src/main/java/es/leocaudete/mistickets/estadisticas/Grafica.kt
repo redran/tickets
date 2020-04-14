@@ -14,11 +14,13 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.common.io.ByteArrayDataInput
 import es.leocaudete.mistickets.MainActivity
 import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.utilidades.Utilidades
 import kotlinx.android.synthetic.main.activity_grafica.*
 import org.jetbrains.anko.colorAttr
 import java.time.LocalDate
@@ -29,6 +31,7 @@ import java.util.stream.Collectors
 class Grafica : AppCompatActivity() {
 
     lateinit var listaTickets:ArrayList<Ticket>
+    var utilidades=Utilidades()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,7 +148,14 @@ class Grafica : AppCompatActivity() {
                 var i=0f
                 for((v,k) in  misdatos){
                     datos.add(BarEntry(i,k.sumByDouble { x->x.precio }.toFloat()))
-                    labels.add(arrayCategorias[v])
+                    when(misdatos.size){
+                        in 1..2 -> labels.add(utilidades.miSubstring(0,12,arrayCategorias[v]))
+                        3 -> labels.add(utilidades.miSubstring(0,8,arrayCategorias[v]))
+                        in 4..6 ->  labels.add(utilidades.miSubstring(0,5,arrayCategorias[v]))
+                        in 7..100 ->  labels.add(utilidades.miSubstring(0,3,arrayCategorias[v]))
+                        else -> labels.add(arrayCategorias[v])
+                    }
+
                     i++
                 }
 
@@ -160,7 +170,6 @@ class Grafica : AppCompatActivity() {
                 xAxis.mCenteredEntries
                 xAxis.granularity=1f
                 xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-
                 graficaBarras.data=barData
                 graficaBarras.setFitBars(true)
                 graficaBarras.animateXY(5000,5000)
@@ -181,7 +190,13 @@ class Grafica : AppCompatActivity() {
                 var i=0f
                 for((v,k) in  misdatos){
                     datos.add(BarEntry(i,k.sumByDouble { x->x.precio }.toFloat()))
-                    labels.add(k[0].establecimiento)
+                    when(misdatos.size){
+                        in 1..2 -> labels.add(utilidades.miSubstring(0,12,k[0].establecimiento))
+                        3 -> labels.add(utilidades.miSubstring(0,8,k[0].establecimiento))
+                        in 4..6 ->  labels.add(utilidades.miSubstring(0,5,k[0].establecimiento))
+                        in 7..100 ->  labels.add(utilidades.miSubstring(0,3,k[0].establecimiento))
+                        else -> labels.add(k[0].establecimiento)
+                    }
                     i++
                 }
 
@@ -202,15 +217,7 @@ class Grafica : AppCompatActivity() {
                 graficaBarras.invalidate()
                 graficaBarras.description.text="Gasto menual por categorías"
                 graficaBarras.description.setPosition(5f,-5f)
-
-
-
             }
-
-
-
-
-
         }
 
     }

@@ -249,72 +249,9 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-
-                var filterdTickets = mutableListOf<Ticket>()
-                var conFiltro: Boolean = false
-                var reqTicket = data?.getSerializableExtra("where") as Ticket
-
-
-                // Comprobamos si el objeto que hemos recibido tiene datos para el filtro
-                // y vamos filtrando de la lista original y vamos reduciendo poco a por la lista aplicando
-                // filtro sucesivos
-                if (!TextUtils.isEmpty(reqTicket.titulo)) {
-
-                    filterdTickets =
-                        tickets.filter { p -> p.titulo.contains(reqTicket.titulo) }.toMutableList()
-                    if (filterdTickets.size > 0) {
-                        tickets = filterdTickets
-                        conFiltro = true
-                    }
-                }
-                if (!TextUtils.isEmpty(reqTicket.establecimiento)) {
-                    filterdTickets =
-                        tickets.filter { p -> p.establecimiento.contains(reqTicket.establecimiento) }
-                            .toMutableList()
-                    if (filterdTickets.size > 0) {
-                        tickets = filterdTickets
-                        conFiltro = true
-                    }
-                }
-                if (!TextUtils.isEmpty(reqTicket.localidad)) {
-                    filterdTickets = tickets.filter { p -> p.localidad.equals(reqTicket.localidad) }
-                        .toMutableList()
-                    if (filterdTickets.size > 0) {
-                        tickets = filterdTickets
-                        conFiltro = true
-                    }
-
-
-                }
-                if (reqTicket.provincia > 0) {
-                    filterdTickets =
-                        tickets.filter { p -> p.provincia == reqTicket.provincia }.toMutableList()
-                    if (filterdTickets.size > 0) {
-                        tickets = filterdTickets
-                        conFiltro = true
-                    }
-                }
-                if (!TextUtils.isEmpty(reqTicket.fecha_de_compra)) {
-                    filterdTickets =
-                        tickets.filter { p -> p.fecha_de_compra.equals(reqTicket.fecha_de_compra) }
-                            .toMutableList()
-                    if (filterdTickets.size > 0) {
-                        tickets = filterdTickets
-                        conFiltro = true
-                    }
-
-                }
-
-                if (conFiltro) {
-                    setUpRecyclerView(tickets) // Si encuentra algo envia el array reducido
-                } else {
-                    filterdTickets.clear()
-                    setUpRecyclerView(filterdTickets) // Si no encuentra nada envia un array vacio
-                }
-
-
+                var reqTicket = data?.getSerializableExtra("filtrados") as ArrayList<Ticket>
+                setUpRecyclerView(reqTicket)
             }
-
         }
     }
 

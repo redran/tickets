@@ -30,6 +30,22 @@ class Utilidades {
         }
     }
 
+    /**
+     * Este método es el equivalente a un substring
+     * pero si el string original no tiene tantos
+     * carateres como quiere sacar el subtring, no da un
+     * error de out of range sino que develve el string
+     * desde el rango de inicio hasta el tamaño de la cadena
+     */
+    fun miSubstring(desde:Int, hasta:Int, cadena:String): String{
+
+        if(cadena.length>=hasta){
+            return cadena.substring(desde,hasta)
+        }else{
+            return cadena.substring(desde, cadena.length)
+        }
+    }
+
 
 
 }

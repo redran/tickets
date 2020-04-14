@@ -58,8 +58,8 @@
     <string name="categoria">Categoría</string>
     <!-- busquedas -->
     <string name="buscar">Buscar</string>
-    <string name="busqueda_descripcion">Introduza una palabra descriptiva</string>
-    <string name="busqueda_tienda">Introduza el nombre del establecimiento</string>
+    <string name="busqueda_descripcion">La descripción contiene...</string>
+    <string name="busqueda_tienda">El nombre del establecimiento contiene...</string>
     <string name="busqueda_localidad">Introduza la localidad</string>
     <string name="busqueda_fecha">Seleccione una fecha</string>
     <string name="busqueda_titulo">Introduza los parámetros de búsqueda</string>

@@ -6,34 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Busquedas">
 
-    <ImageButton
-        android:id="@+id/find_img_calendar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/find_ed_localidades"
-        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
-
-    <EditText
-        android:id="@+id/find_et_fecha"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="80dp"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="@string/fecha"
-        android:importantForAutofill="no"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/find_ed_localidades" />
-
     <EditText
         android:id="@+id/find_ed_localidades"
         android:layout_width="match_parent"
@@ -53,7 +25,7 @@
     <Spinner
         android:id="@+id/find_spinner_provincias"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
         android:layout_marginStart="21dp"
         android:layout_marginTop="13dp"
         android:layout_marginEnd="21dp"
@@ -134,4 +106,55 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_find_desc" />
+
+    <Spinner
+        android:id="@+id/spinner_cat"
+        android:layout_width="fill_parent"
+        android:layout_height="24dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="21dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_anno" />
+
+    <Spinner
+        android:id="@+id/spinner_anno"
+        android:layout_width="120dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/find_ed_localidades" />
+
+    <Spinner
+        android:id="@+id/spinner_meses"
+        android:layout_width="150dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="21dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/find_ed_localidades" />
+
+    <ProgressBar
+        android:id="@+id/pb_cargando"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="21dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_cat" />
+
+    <TextView
+        android:id="@+id/tvCargando"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/cargando"
+        app:layout_constraintBottom_toTopOf="@+id/pb_cargando"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
