@@ -1,4 +1,4 @@
-package es.leocaudete.mistickets
+package es.leocaudete.mistickets.personales.addticket
 
 
 import android.app.Activity
@@ -13,11 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Picasso
-import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.R
+import es.leocaudete.mistickets.personales.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_gestor_fotos.*
-import kotlinx.android.synthetic.main.activity_visor_fotos.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream

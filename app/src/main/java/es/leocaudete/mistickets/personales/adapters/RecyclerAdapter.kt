@@ -1,4 +1,4 @@
-package es.leocaudete.mistickets.adapters
+package es.leocaudete.mistickets.personales.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -14,10 +14,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import es.leocaudete.mistickets.R
-import es.leocaudete.mistickets.modelo.Ticket
-import es.leocaudete.mistickets.VisorTicket
+import es.leocaudete.mistickets.personales.modelo.Ticket
+import es.leocaudete.mistickets.personales.main.VisorTicket
 import es.leocaudete.mistickets.preferences.SharedApp
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
 /**

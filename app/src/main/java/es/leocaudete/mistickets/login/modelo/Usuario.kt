@@ -1,4 +1,4 @@
-package es.leocaudete.mistickets.modelo
+package es.leocaudete.mistickets.login.modelo
 
 import com.google.firebase.Timestamp
 import java.io.Serializable

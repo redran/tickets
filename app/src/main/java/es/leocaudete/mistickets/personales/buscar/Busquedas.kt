@@ -1,7 +1,6 @@
-package es.leocaudete.mistickets
+package es.leocaudete.mistickets.personales.buscar
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,14 +11,15 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import es.leocaudete.mistickets.personales.main.MainActivity
+import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.dao.SQLiteDB
-import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.personales.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_busquedas.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.function.Predicate
 import kotlin.collections.ArrayList
 
 /**

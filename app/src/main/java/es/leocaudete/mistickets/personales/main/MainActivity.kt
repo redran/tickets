@@ -1,4 +1,4 @@
-package es.leocaudete.mistickets
+package es.leocaudete.mistickets.personales.main
 
 import android.app.Activity
 import android.app.NotificationChannel
@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -20,13 +19,17 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import es.leocaudete.mistickets.adapters.RecyclerAdapter
+import es.leocaudete.mistickets.R
+import es.leocaudete.mistickets.personales.sincronizar.Syncronizar
+import es.leocaudete.mistickets.personales.adapters.RecyclerAdapter
+import es.leocaudete.mistickets.personales.addticket.NuevoTicket
+import es.leocaudete.mistickets.personales.buscar.Busquedas
 import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.login.Login
-import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.personales.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.dao.FirestoreDB
-import es.leocaudete.mistickets.estadisticas.Grafica
+import es.leocaudete.mistickets.personales.estadisticas.Grafica
 import es.leocaudete.mistickets.utilidades.ShowMessages
 import es.leocaudete.mistickets.utilidades.Utilidades
 
@@ -216,7 +219,7 @@ class MainActivity : AppCompatActivity() {
                     { eliminaUsuarioActual() })
                 true
             }
-            R.id.estadisticas->{
+            R.id.estadisticas ->{
                 // ArrayList de los tickets ordenados por fecha
                 var arrayLisTickets = ArrayList(tickets.sortedByDescending { x ->  LocalDate.parse(x.fecha_de_compra, DateTimeFormatter.ofPattern("dd-MM-yyyy"))})
 

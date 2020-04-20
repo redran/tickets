@@ -1,9 +1,7 @@
-package es.leocaudete.mistickets.modelo
+package es.leocaudete.mistickets.personales.modelo
 
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import java.io.Serializable
-import java.time.LocalDate
 
 /**
  * @author Leonardo Caudete Palau - 2º DAM

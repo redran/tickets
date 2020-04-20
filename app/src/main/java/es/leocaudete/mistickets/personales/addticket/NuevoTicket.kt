@@ -1,4 +1,4 @@
-package es.leocaudete.mistickets
+package es.leocaudete.mistickets.personales.addticket
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -18,8 +18,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import es.leocaudete.mistickets.personales.main.MainActivity
+import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.dao.SQLiteDB
-import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.personales.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.ShowMessages
 import es.leocaudete.mistickets.utilidades.Utilidades

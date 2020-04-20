@@ -1,4 +1,4 @@
-package es.leocaudete.mistickets.estadisticas
+package es.leocaudete.mistickets.personales.estadisticas
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,26 +7,20 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.google.common.io.ByteArrayDataInput
-import es.leocaudete.mistickets.MainActivity
+import es.leocaudete.mistickets.personales.main.MainActivity
 import es.leocaudete.mistickets.R
-import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.personales.modelo.Ticket
 import es.leocaudete.mistickets.utilidades.Utilidades
 import kotlinx.android.synthetic.main.activity_grafica.*
-import org.jetbrains.anko.colorAttr
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.LinkedHashSet
-import java.util.stream.Collectors
 
 class Grafica : AppCompatActivity() {
 

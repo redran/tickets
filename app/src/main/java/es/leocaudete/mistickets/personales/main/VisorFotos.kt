@@ -1,4 +1,4 @@
-package es.leocaudete.mistickets
+package es.leocaudete.mistickets.personales.main
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -12,10 +12,10 @@ import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.R
+import es.leocaudete.mistickets.personales.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_visor_fotos.*
-import java.io.File
 
 /**
  * @author Leonardo Caudete Palau - 2º DAM
