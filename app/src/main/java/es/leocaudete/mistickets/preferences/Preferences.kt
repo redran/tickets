@@ -16,6 +16,7 @@ class Preferences(context:Context) {
     private val LOGIN_PERISTENCE = "login"
     private val LOCAL_DB = "bd"
     private val ID_USU = "id"
+    private val DIETA="dieta"
 
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
@@ -39,4 +40,11 @@ class Preferences(context:Context) {
     var usuario_logueado:String
         get()= prefs.getString(ID_USU, "")
         set(value) = prefs.edit().putString(ID_USU, value).apply()
+
+    /**
+     * Almacena true o false si se ha seleccionado el modo dietas o Tickets
+     */
+    var dieta: Boolean
+        get()= prefs.getBoolean(DIETA, false)
+        set(value) = prefs.edit().putBoolean(DIETA, value).apply()
 }

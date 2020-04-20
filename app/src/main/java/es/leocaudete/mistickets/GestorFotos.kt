@@ -26,7 +26,8 @@ import java.io.IOException
 /**
  * @author Leonardo Caudete Palau - 2º DAM
  */
-class GestorFotos : AppCompatActivity() {
+class GestorFotos: AppCompatActivity() {
+
 
     lateinit var unTicket: Ticket
     lateinit var storageDir: String
@@ -47,6 +48,7 @@ class GestorFotos : AppCompatActivity() {
         if (SharedApp.preferences.bdtype) {
             storageDir =
                 getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+
         } else {
             // Para la primera vez, vemmos si el directorio existe, sino, lo creamos
             storageDir =
