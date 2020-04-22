@@ -17,6 +17,7 @@ class Preferences(context:Context) {
     private val LOCAL_DB = "bd"
     private val ID_USU = "id"
     private val DIETA="dieta"
+    private val VERSION_FIREBASE="fbversion"
 
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
@@ -47,4 +48,11 @@ class Preferences(context:Context) {
     var dieta: Boolean
         get()= prefs.getBoolean(DIETA, false)
         set(value) = prefs.edit().putBoolean(DIETA, value).apply()
+
+    /**
+     * Almacena la version actual de nuestro schema de Firebase
+     */
+    var fbschema:Int
+        get()= prefs.getInt(VERSION_FIREBASE, 1)
+        set(value) = prefs.edit().putInt(VERSION_FIREBASE, value).apply()
 }

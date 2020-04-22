@@ -68,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="21dp"
         android:ems="10"
         android:hint="@string/busqueda_descripcion"
@@ -142,11 +142,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="21dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/btbuscar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_cat" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tvCargando"
@@ -157,4 +157,40 @@
         android:text="@string/cargando"
         app:layout_constraintBottom_toTopOf="@+id/pb_cargando"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cbDietas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/dietas"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_cat"
+        tools:layout_editor_absoluteX="22dp" />
+
+    <RadioGroup
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="21dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="356dp">
+
+        <RadioButton
+            android:id="@+id/rbCobrado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cobrado" />
+
+        <RadioButton
+            android:id="@+id/rbSinCobrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sin_cobrar" />
+
+        <RadioButton
+            android:id="@+id/rbSinPasar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sin_pasar" />
+    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -108,10 +108,6 @@ class NuevoTicket : AppCompatActivity() {
             unTicket.idusuario = SharedApp.preferences.usuario_logueado
         }
 
-
-
-
-
         inicializaCampos()
 
         if (intent.getSerializableExtra("updateTicket") != null) {
@@ -166,6 +162,14 @@ class NuevoTicket : AppCompatActivity() {
 
         etPrecio.setText(unTicket.precio.toString())
 
+       if(unTicket.isdieta==0){
+           cb_dietas.isChecked=false
+           btn_dietas.visibility=View.GONE
+       }else{
+           cb_dietas.isChecked=true
+           btn_dietas.visibility=View.VISIBLE
+       }
+
 
     }
 
@@ -216,6 +220,9 @@ class NuevoTicket : AppCompatActivity() {
 
         spinner_categorias.adapter = adapterCategorias
 
+        cb_dietas.isChecked=false
+        btn_dietas.visibility=View.GONE
+
 
     }
 
@@ -227,6 +234,7 @@ class NuevoTicket : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+       // Hemos llamado al gestor de fotos
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 unTicket = data?.getSerializableExtra("unTicket") as Ticket
@@ -234,6 +242,12 @@ class NuevoTicket : AppCompatActivity() {
 
             }
 
+        }
+        // Hemos llamado al gestor de dietas
+        if(requestCode==2){
+            if(resultCode==Activity.RESULT_OK){
+                unTicket= data?.getSerializableExtra("unTicket") as Ticket
+            }
         }
     }
 
@@ -439,6 +453,11 @@ class NuevoTicket : AppCompatActivity() {
             unTicket.precio=precioCambiado
         }
 
+        if(cb_dietas.isChecked){
+            unTicket.isdieta=1
+        }else{
+            unTicket.isdieta=0
+        }
     }
 
     // Validamos que todos los campos obligatorios tengan datos y también que los que no son obligatios cumplan con una serie de criterios
@@ -548,6 +567,25 @@ class NuevoTicket : AppCompatActivity() {
         }
 
     }
+
+    /**
+     * Comprueba si se ha marcado dietas o no
+     */
+    fun isDietas(view: View) {
+        if(cb_dietas.isChecked){
+            btn_dietas.visibility=View.VISIBLE
+        }else{
+            btn_dietas.visibility=View.GONE
+        }
+    }
+    fun gestdietas(view: View) {
+        val myIntent = Intent(this, Dietas::class.java).apply {
+            putExtra("Ticket", unTicket)
+
+        }
+        startActivityForResult(myIntent, 2)
+    }
+
 
 }
 

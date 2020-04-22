@@ -35,6 +35,17 @@ class Ticket: Serializable{
     var categoria: Int=0
     var precio: Double=0.0
 
+    // Añadido el 20-04-2020
+    var isdieta:Int=0 // por defecto No
+
+    var fecha_evio: String=""
+    var metodos_envio:Int=0
+    var enviado_a:String=""
+
+    var fecha_cobro: String=""
+    var metodo_cobro:String=""
+
+
 
 
 }

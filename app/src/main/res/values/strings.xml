@@ -71,9 +71,10 @@
     <string name="cargando">Cargando tickets. Por favor espere.</string>
 
     <!-- main Menu -->
-    <string name="menuListado">Listado de Tickets</string>
+    <string name="menuListado">Listados rápidos</string>
     <string name="menuTodos">Todos</string>
     <string name="menuCaduca">Fin de garantía próxima</string>
+    <string name="menuDietas">Dietas de empresa</string>
     <string name="menuNuevo">Nuevo ticket</string>
     <string name="menuBuscar">Buscar</string>
     <string name="menuSyc">Sycronizar Imagenes</string>
@@ -91,6 +92,32 @@
 
     <!-- Graficas -->
     <string name="grafica">Mostrar Gráfica</string>
+
+    <!-- Dietas -->
+    <string name="dietas">Dietas</string>
+    <string name="gest_dietas">Gestionar Dietas</string>
+    <string name="guardar">Guardar</string>
+    <string name="fechaentrega">Fecha de entrega a la empresa</string>
+    <string name="fechacobro">Fecha de cobro</string>
+    <string name="metodocobro">Método de cobro</string>
+    <string name="metodoentrega">Selecciona un método de entrega </string>
+    <string name="alemailde">A la dirección de email</string>
+    <string name="alwhatsappde">Al número de Whatsapp</string>
+    <string name="entregadoa">Entegado a </string>
+    <string name="tituloentrega">¿Cuándo se entregó el ticket?</string>
+    <string name="titulocobro">¿Cuándo se cobro el ticket?</string>
+    <string name="sin_cobrar">Sin Cobrar</string>
+    <string name="cobrado">Cobrado</string>
+    <string name="sin_pasar">Sin Pasar</string>
+
+    <!-- Metodos de envio de dietas -->
+    <string-array name="enviodietas">
+        <item>Selecciona un método de envío</item>
+        <item>E-Mail</item>
+        <item>Whatsapp</item>
+        <item>En mano</item>
+
+    </string-array>
 
     <!--lista de privincias en España -->
     <string-array name="provincias">

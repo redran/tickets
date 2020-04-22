@@ -1,14 +1,18 @@
 package es.leocaudete.mistickets.login
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import es.leocaudete.mistickets.MainActivity
 import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.dao.SQLiteDB
@@ -25,6 +29,8 @@ import kotlinx.android.synthetic.main.login_activity.progressBar
  */
 class Login : AppCompatActivity() {
 
+    // Usamos esta constante para actualizar el schema de Firebase
+    val VERSION_FIREBASE = 3
     private lateinit var auth: FirebaseAuth
     lateinit var storageDir: String
     lateinit var dbSQL: SQLiteDB
@@ -42,20 +48,37 @@ class Login : AppCompatActivity() {
         dbSQL = SQLiteDB(this, null)
 
         auth = FirebaseAuth.getInstance()
-      /*  SharedApp.preferences.usuario_logueado = ""
-        SharedApp.preferences.bdtype = swbd.isChecked*/
+        /*  SharedApp.preferences.usuario_logueado = ""
+          SharedApp.preferences.bdtype = swbd.isChecked*/
 
         val recordar = SharedApp.preferences.login
         val dbcloud = SharedApp.preferences.bdtype
         val userLog = SharedApp.preferences.usuario_logueado
 
+        /**
+         * Descomentar esta linea para volver a una version anterior y que se vuelva a ejecutar
+         * el update de firebase. No olvidarse de poner el número de versión anterior al que queremos
+         * que haga el update.
+         */
+        //SharedApp.preferences.fbschema=2
         if (recordar) {
+
             // Si hemos recordado usuario, entonces tenemos que comprobar si es online u offline
             if (dbcloud) {
-                if (auth.currentUser != null) {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                //Primero tenemos que ver que no exista una actualizacion en el schema de la base
+                // de datos de Firebase (SQLite se encarga el en su DAO).
+                // Entonces tendremos que cerrar la sesion y que se loge para actualziar
+                if(VERSION_FIREBASE>SharedApp.preferences.fbschema){
+                    SharedApp.preferences.login=false
+                    SharedApp.preferences.usuario_logueado=""
+                }else
+                {
+                    if (auth.currentUser != null) {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
                 }
+
             } else {
                 if (!TextUtils.isEmpty(userLog)) {
                     startActivity(Intent(this, MainActivity::class.java))
@@ -134,6 +157,7 @@ class Login : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
 
                     if (task.isSuccessful) {
+                       // upgrafeFirebase()
                         action()
                     } else {
                         Toast.makeText(
@@ -148,14 +172,18 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // Comprueba si tiene datos y si quiere borrarlos y carga el MainAativity
+    /**
+     * Comprueba que el email de verificación se ha aceptado
+     * Si es correcto se actualiza la base de datos en caso de haber cambios en el schema
+     * y carga el main
+     */
     private fun action() {
 
         // Solo si ha aceptado el email de verificacion
         if (auth.currentUser!!.isEmailVerified) {
             storageDir =
                 getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
-            startActivity(Intent(this, MainActivity::class.java))
+            upgrafeFirebase()
         } else {
             // En este punto tendríamos que verificar si la fecha de ingreso y la actual tienen 1 mes de diferencia y si la tienen eliminar la cuenta de firebase
             gestorMensajes.showAlertOneButton(
@@ -191,33 +219,81 @@ class Login : AppCompatActivity() {
     }
 
 
+    /**
+     * Realiza un upgrade en Firebase para insertar los nuevos
+     * campos, dependiendo de la versión
+     *
+     */
+    fun upgrafeFirebase() {
+        val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
+        val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
+        val rutaTickets = "User/" + userID + "/Tickets"
 
-    // Este metodo comprueba si hay datos en SQLite
-    private fun compruebaDatosOffline() {
+        if(VERSION_FIREBASE>SharedApp.preferences.fbschema){
+            when (VERSION_FIREBASE) {
+                2 -> {
+                    val data = hashMapOf("categoria" to 0, "precio" to 0.00)
+                    val ticketsRef = dbRef.collection(rutaTickets)
+                        .get()
+                        .addOnSuccessListener { result ->
+                            for (document in result) {
 
-        val email = ed_user.text.toString()
-        if (dbSQL.buscaUsuario(email)) {
-            syncronizaOnLineDeOffLine(email)
+                              var ticket=document["idTicket"].toString()
+                                dbRef.collection(rutaTickets).document(ticket).set(data,
+                                    SetOptions.merge())
+                            }
+                            // Una vez actualizada, actualizamos la version de la preferencia
+                            // para que no vuelva a hacerla
+                            SharedApp.preferences.fbschema=VERSION_FIREBASE
+                            startActivity(Intent(this, MainActivity::class.java))
+                        }
+                        .addOnFailureListener { exception ->
+                            Toast.makeText(
+                                this,
+                                "Se ha producido un error al actualizar la base de datos",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            Log.d(TAG, "Error getting documents:", exception)
+                        }
+                }
+                3 -> {
+                    val data = hashMapOf(
+                        "isdieta" to 0,
+                        "fecha_envio" to "",
+                        "metodo_envio" to 0,
+                        "enviado_a" to "",
+                        "fecha_cobro" to "",
+                        "metodo_cobro" to ""
+                    )
+                    val ticketsRef = dbRef.collection(rutaTickets)
+                        .get()
+                        .addOnSuccessListener { result ->
+                            for (document in result) {
+
+                                var ticket=document["idTicket"].toString()
+                                dbRef.collection(rutaTickets).document(ticket).set(data,
+                                    SetOptions.merge())
+                            }
+                            // Una vez actualizada, actualizamos la version de la preferencia
+                            // para que no vuelva a hacerla
+                            SharedApp.preferences.fbschema=VERSION_FIREBASE
+                            startActivity(Intent(this, MainActivity::class.java))
+                        }
+                        .addOnFailureListener { exception ->
+                            Toast.makeText(
+                                this,
+                                "Se ha producido un error al actualizar la base de datos",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            Log.d(TAG, "Error getting documents:", exception)
+                        }
+                }
+
+            }
+
+        }else{
+            startActivity(Intent(this, MainActivity::class.java))
         }
-    }
-
-
-    // Se ha encrontrado el usuario en Local y vamos a subir los cambios (si los hubiere) a Firebase
-    private fun syncronizaOnLineDeOffLine(email: String) {
-
-        val id_usuario = dbSQL.buscaIdUsuario(email)
-        if (!TextUtils.isEmpty(id_usuario)) {
-            // Busca todos los tickets de ese usuario
-            val args = arrayOf(id_usuario)
-            val db: SQLiteDatabase = dbSQL.readableDatabase
-
-
-            val cursor = db.rawQuery(
-                " SELECT * FROM ${SQLiteDB.TABLA_TICKETS} WHERE ${SQLiteDB.USUARIO_TICKET}=?",
-                args
-            )
-        }
-
 
     }
 

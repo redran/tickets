@@ -24,7 +24,7 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     var utilidades = Utilidades()
 
     companion object {
-        val DATABASE_VERSION = 2
+        val DATABASE_VERSION = 4
         val DATABASE_NAME = "MisTickets.db"
 
         /** Nombre de la tabla **/
@@ -64,6 +64,15 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val CATEGORIA = "categoria"
         val PRECIO = "precio"
 
+        // Update 21-04-2020
+        val ISDIETA = "isdieta"
+        val FECHA_ENVIO = "fecha_envio"
+        val METODO_ENVIO = "metodo_envio"
+        val ENVIADO_A = "enviado_a"
+        val FECHA_COBRO = "fecha_cobro"
+        val METODO_COBRO = "metodo_cobro"
+
+
     }
 
     // Cea las tablas de la base de datos si no existen
@@ -100,7 +109,15 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                         // Estos campos se añaden para los que hagan la instalación nueva desde la version 2
                         // Los que ya tengan instalada la app con la version 1 haran el Upgrade
                         "${CATEGORIA} INTEGER DEFAULT 1, " +
-                        "${PRECIO} REAL DEFAULT 0.0 )"
+                        "${PRECIO} REAL DEFAULT 0.0, " +
+                        // Estos campos se añaden para los que hagan la instalación nueva desde la version 3
+                        // Los que ya tengan instalada la app con la version 1 u 2 haran el Upgrade
+                        "${ISDIETA} INTEGER DEFAULT 0, " +
+                        "${FECHA_ENVIO} TEXT, " +
+                        "${METODO_ENVIO} INTEGER DEFAULT 0, " +
+                        "${ENVIADO_A} TEXT, " +
+                        "${FECHA_COBRO} TEXT, " +
+                        "${METODO_COBRO} TEXT )"
 
             db!!.execSQL(createTableTicket)
         } catch (e: SQLiteException) {
@@ -112,16 +129,26 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // ACtualiza el esquema de la tabla si la versión de SQLite cambia
         if (newVersion > oldVersion) {
-            when(newVersion){
-                2->  {
+            when (newVersion) {
+                2 -> {
                     db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${CATEGORIA} INTEGER DEFAULT 1")
                     db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${PRECIO} REAL DEFAULT 0.0")
+                }
+                3 -> {
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${ISDIETA} INTEGER DEFAULT 0")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${FECHA_ENVIO} TEXT")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${METODO_ENVIO} INTEGER DEFAULT 0 ")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${ENVIADO_A} TEXT")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${FECHA_COBRO} TEXT")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${METODO_COBRO} TEXT")
                 }
 
 
             }
         }
     }
+
+
 
     override fun onOpen(db: SQLiteDatabase?) {
         super.onOpen(db)
@@ -162,7 +189,7 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     }
 
-    fun addTicket(ticket: Ticket):Long {
+    fun addTicket(ticket: Ticket): Long {
 
         val data = ContentValues()
         data.put(ID_TICKET, ticket.idTicket)
@@ -181,8 +208,14 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         data.put(FOTO3, ticket.foto3)
         data.put(FOTO4, ticket.foto4)
         data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
-        data.put(CATEGORIA,ticket.categoria)
-        data.put(PRECIO,ticket.precio)
+        data.put(CATEGORIA, ticket.categoria)
+        data.put(PRECIO, ticket.precio)
+        data.put(ISDIETA, ticket.isdieta)
+        data.put(FECHA_ENVIO, ticket.fecha_evio)
+        data.put(METODO_ENVIO, ticket.metodos_envio)
+        data.put(ENVIADO_A,ticket.enviado_a)
+        data.put(FECHA_COBRO,ticket.fecha_cobro)
+        data.put(METODO_COBRO,ticket.metodo_cobro)
 
         //Abrimos la BD en modo escritura
         val db = this.writableDatabase
@@ -201,7 +234,8 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         db.execSQL("DELETE FROM $TABLA_USUARIO WHERE $ID_USUARIO=?", args)
         db.close()
-        var storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + id_usuario
+        var storageDir =
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + id_usuario
         // Borramos recursivamente la carpeta del almacenamiento interno que tiene como nombre el id de Usuario
         utilidades.delRecFileAndDir(storageDir)
 
@@ -217,13 +251,14 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         // Le pasamos la ruta de la carpeta del ticket, que contiene todas las fotos de sus tickets
         // y borramos las foto y la carpeta
-        var storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + id_ticket
+        var storageDir =
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + id_ticket
         utilidades.delRecFileAndDir(storageDir)
 
 
     }
 
-    fun updateTicket(ticket: Ticket):Int {
+    fun updateTicket(ticket: Ticket): Int {
 
         val args = arrayOf(ticket.idTicket)
 
@@ -243,10 +278,16 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         data.put(FOTO4, ticket.foto4)
         data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
         data.put(CATEGORIA, ticket.categoria)
-        data.put(PRECIO,ticket.precio)
+        data.put(PRECIO, ticket.precio)
+        data.put(ISDIETA, ticket.isdieta)
+        data.put(FECHA_ENVIO, ticket.fecha_evio)
+        data.put(METODO_ENVIO, ticket.metodos_envio)
+        data.put(ENVIADO_A,ticket.enviado_a)
+        data.put(FECHA_COBRO,ticket.fecha_cobro)
+        data.put(METODO_COBRO,ticket.metodo_cobro)
 
         val db = this.writableDatabase
-        val updateados=db.update(TABLA_TICKETS, data, "$ID_TICKET=?", args)
+        val updateados = db.update(TABLA_TICKETS, data, "$ID_TICKET=?", args)
         db.close()
 
         return updateados
@@ -377,27 +418,34 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         )
 
         if (cursor != null) {
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 do {
-                    val ticket=Ticket()
-                    ticket.idTicket=cursor.getString(0)
-                    ticket.idusuario=cursor.getString(1)
-                    ticket.titulo=cursor.getString(2)
-                    ticket.establecimiento=cursor.getString(3)
-                    ticket.direccion=cursor.getString(4)
-                    ticket.fecha_de_compra=cursor.getString(5)
-                    ticket.provincia=cursor.getInt(6)
-                    ticket.localidad=cursor.getString(7)
-                    ticket.duracion_garantia=cursor.getInt(8)
-                    ticket.periodo_garantia=cursor.getInt(9)
+                    val ticket = Ticket()
+                    ticket.idTicket = cursor.getString(0)
+                    ticket.idusuario = cursor.getString(1)
+                    ticket.titulo = cursor.getString(2)
+                    ticket.establecimiento = cursor.getString(3)
+                    ticket.direccion = cursor.getString(4)
+                    ticket.fecha_de_compra = cursor.getString(5)
+                    ticket.provincia = cursor.getInt(6)
+                    ticket.localidad = cursor.getString(7)
+                    ticket.duracion_garantia = cursor.getInt(8)
+                    ticket.periodo_garantia = cursor.getInt(9)
                     ticket.avisar_fin_garantia = cursor.getInt(10)
-                    ticket.foto1=cursor.getString(11)
-                    ticket.foto2=cursor.getString(12)
-                    ticket.foto3=cursor.getString(13)
-                    ticket.foto4=cursor.getString(14)
-                    ticket.fecha_modificacion=cursor.getString(15)
-                    ticket.categoria=cursor.getInt(16) // Esta columna es una actualización que se añade a partir de la version 2
-                    ticket.precio=cursor.getDouble(17)
+                    ticket.foto1 = cursor.getString(11)
+                    ticket.foto2 = cursor.getString(12)
+                    ticket.foto3 = cursor.getString(13)
+                    ticket.foto4 = cursor.getString(14)
+                    ticket.fecha_modificacion = cursor.getString(15)
+                    ticket.categoria =
+                        cursor.getInt(16) // Esta columna es una actualización que se añade a partir de la version 2
+                    ticket.precio = cursor.getDouble(17)
+                    ticket.isdieta = cursor.getInt(18)
+                    ticket.fecha_evio = cursor.getString(19)
+                    ticket.metodos_envio = cursor.getInt(20)
+                    ticket.enviado_a = cursor.getString(21)
+                    ticket.fecha_cobro = cursor.getString(22)
+                    ticket.metodo_cobro = cursor.getString(23)
 
 
                     tickets.add(ticket)

@@ -161,6 +161,8 @@ class Busquedas : AppCompatActivity() {
         )
         spinner_anno.adapter = adapterAnnos
 
+        cbDietas.isChecked=false
+
     }
 
     /**

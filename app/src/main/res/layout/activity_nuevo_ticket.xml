@@ -216,7 +216,7 @@
 
     <EditText
         android:id="@+id/etPrecio"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
         android:layout_marginTop="10dp"
@@ -230,11 +230,35 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="15dp"
         android:text="€"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/etPrecio"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
+
+    <CheckBox
+        android:onClick="isDietas"
+        android:id="@+id/cb_dietas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/dietas"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
+
+    <Button
+        android:onClick="gestdietas"
+        android:id="@+id/btn_dietas"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="21dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/gest_dietas"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
 
 
