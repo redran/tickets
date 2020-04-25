@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -33,8 +32,11 @@ import es.leocaudete.mistickets.utilidades.Utilidades
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import java.time.LocalDate
+import java.time.Month
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @author Leonardo Caudete Palau - 2º DAM
@@ -55,7 +57,8 @@ class MainActivity : AppCompatActivity() {
 
     var gestoMensajes = ShowMessages()
     val fbUtils = FirestoreDB(this)
-    val utils=Utilidades()
+    val utils = Utilidades()
+    val gestorMensajes = ShowMessages()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +70,16 @@ class MainActivity : AppCompatActivity() {
         // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
         dbSQL = SQLiteDB(this, null)
 
-        getTickets(tickets)
+        if (SharedApp.preferences.modooperacion == 1) {
+            gestorMensajes.showActionOneButton("ALERTA",
+                "Estás ejecutando una versión antigua de la app.\n" +
+                        "Para evitar errores pérdida de datos se habilita el acceso como solo lectura.\n" +
+                        "Actualice a la última versión para usar todas las características.",
+                this,
+                { getTickets(tickets) })
+        } else {
+            getTickets(tickets)
+        }
 
     }
 
@@ -77,14 +89,34 @@ class MainActivity : AppCompatActivity() {
         //
     }
 
-    private fun setUpRecyclerView(reqTickets: MutableList<Ticket>) {
+    private fun setUpRecyclerView(reqTickets: MutableList<Ticket>, opcion:Int) {
+
+        var listaFiltrada= mutableListOf<Ticket>()
+        // Ahora filtramos lo que queremos que salga por pantalla
+        when(opcion){
+            // Opcion se recibe todos los tickets y vamos a mostrar solo los del mes actual
+            1 -> listaFiltrada=listadoFiltrado(1, reqTickets)
+            // Solo los que sean dietas
+            2 -> listaFiltrada=listadoFiltrado(2, reqTickets)
+            // Solo los personales
+            3 -> listaFiltrada=listadoFiltrado(3, reqTickets)
+
+            // Si viene directo de busquedas o del servicio de caducidad mostramos todos los tickets que llegan
+            else -> listaFiltrada=reqTickets
+        }
 
         // ordenamos la lista por fecha de compra
         // esto nos devuelve un List, al pasarlo al adapter hay que tranformarlo otra vez en MutableList
-        var listaParam = reqTickets.sortedByDescending { x ->  LocalDate.parse(x.fecha_de_compra, DateTimeFormatter.ofPattern("dd-MM-yyyy"))}
+        var listaParam = listaFiltrada.sortedByDescending { x ->
+            LocalDate.parse(
+                x.fecha_de_compra,
+                DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            )
+        }
 
         listadoTickets.setHasFixedSize(true)
         listadoTickets.layoutManager = LinearLayoutManager(this)
+       // Aqui es donde se le pasa el listado que queremos que muestre por pantalla
         myAdapter.RecyclerAdapter(listaParam.toMutableList(), this)
         listadoTickets.adapter = myAdapter
 
@@ -116,8 +148,13 @@ class MainActivity : AppCompatActivity() {
                         val ticket = document.toObject(Ticket::class.java)
                         tickets.add(ticket)
                     }
-                    setUpRecyclerView(reqTickets)
-                    revisaGarantias()
+
+                    setUpRecyclerView(reqTickets,1)
+                    if(SharedApp.preferences.avisounico==0){
+                        SharedApp.preferences.avisounico=1
+                        revisaGarantias()
+                    }
+
 
                 }
 
@@ -137,8 +174,12 @@ class MainActivity : AppCompatActivity() {
                     tickets.add(ticketsUsu[i])
                 }
             }
-            setUpRecyclerView(reqTickets)
-            revisaGarantias()
+            setUpRecyclerView(reqTickets,1)
+            // Solo se avisa una vez después de hacer el login
+            if(SharedApp.preferences.avisounico==0){
+                SharedApp.preferences.avisounico=1
+                revisaGarantias()
+            }
 
         }
 
@@ -161,23 +202,31 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         var auth = FirebaseAuth.getInstance()
         return when (item?.itemId) {
-            R.id.newticket -> {
-                startActivity(Intent(this, NuevoTicket::class.java))
-                finish()
+            R.id.newticket, R.id.newticketicon -> {
+                if (SharedApp.preferences.modooperacion == 1) {
+                    gestorMensajes.showAlertOneButton(
+                        "ALERTA",
+                        "La app está en modo solo lectura y no se permite añadir nuevos tickets",
+                        this
+                    )
+                } else {
+                    startActivity(Intent(this, NuevoTicket::class.java))
+                    finish()
+                }
+
                 true
             }
-            R.id.newticketicon -> {
-                startActivity(Intent(this, NuevoTicket::class.java))
-                finish()
-                true
-            }
-            R.id.todo -> {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+            R.id.personales -> {
+              //  startActivity(Intent(this, MainActivity::class.java))
+                setUpRecyclerView(tickets,3)
                 true
             }
             R.id.caducan -> {
-                setUpRecyclerView(ticketsQueVanACaducar)
+                setUpRecyclerView(ticketsQueVanACaducar,0)
+                true
+            }
+            R.id.dietas->{
+                setUpRecyclerView(tickets,2)
                 true
             }
             R.id.closesission -> {
@@ -185,7 +234,7 @@ class MainActivity : AppCompatActivity() {
                     utils.delRecFileAndDir(storageLocalDir + "/" + auth.currentUser?.uid.toString())
                     auth.signOut()
                 } else {
-                    if(auth!=null){
+                    if (auth != null) {
                         auth.signOut()
                     }
                     SharedApp.preferences.usuario_logueado = ""
@@ -195,17 +244,21 @@ class MainActivity : AppCompatActivity() {
                 finish()
                 true
             }
-            R.id.findticket -> {
+            R.id.findticket, R.id.findticketicon -> {
                 buscar()
                 true
             }
             R.id.sycronizar -> {
-                startActivity(Intent(this, Syncronizar::class.java))
-                finish()
-                true
-            }
-            R.id.findticketicon -> {
-                buscar()
+                if (SharedApp.preferences.modooperacion == 1) {
+                    gestorMensajes.showAlertOneButton(
+                        "ALERTA",
+                        "La app está en modo solo lectura y no se permite la sincronización",
+                        this
+                    )
+                } else {
+                    startActivity(Intent(this, Syncronizar::class.java))
+                    finish()
+                }
                 true
             }
             R.id.eliminar_usuario -> {
@@ -216,11 +269,16 @@ class MainActivity : AppCompatActivity() {
                     { eliminaUsuarioActual() })
                 true
             }
-            R.id.estadisticas->{
+            R.id.estadisticas -> {
                 // ArrayList de los tickets ordenados por fecha
-                var arrayLisTickets = ArrayList(tickets.sortedByDescending { x ->  LocalDate.parse(x.fecha_de_compra, DateTimeFormatter.ofPattern("dd-MM-yyyy"))})
+                var arrayLisTickets = ArrayList(tickets.sortedByDescending { x ->
+                    LocalDate.parse(
+                        x.fecha_de_compra,
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                    )
+                })
 
-                val intent=Intent(this, Grafica::class.java).apply {
+                val intent = Intent(this, Grafica::class.java).apply {
                     putExtra("tickets", arrayLisTickets)
                 }
                 startActivity(intent)
@@ -250,7 +308,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 var reqTicket = data?.getSerializableExtra("filtrados") as ArrayList<Ticket>
-                setUpRecyclerView(reqTicket)
+                setUpRecyclerView(reqTicket,0)
             }
         }
     }
@@ -339,27 +397,58 @@ class MainActivity : AppCompatActivity() {
 
     // Elimina el usuario actual
     private fun eliminaUsuarioActual() {
-        if (SharedApp.preferences.bdtype) {
-            val auth = FirebaseAuth.getInstance() // Usuario autentificado
-            val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
-            fbUtils.borradoCompletoUsuario(userID)
-
+        if (SharedApp.preferences.modooperacion == 1) {
+            gestorMensajes.showAlertOneButton(
+                "ALERTA",
+                "La app está en modo solo lectura y no se permite borrar datos",
+                this
+            )
         } else {
-            // Elimina el usuario SQLite
-            val usuLogin = SharedApp.preferences.usuario_logueado
-            // Primero Eliminamos todos los tickets de ese usuario
-            val listaTickets = dbSQL.devuelveTickets(usuLogin)
-            for (i in listaTickets.indices) {
-                dbSQL.deleteTicket(listaTickets[i].idTicket)
-            }
-            // Luego eliminamos el usuario de la BD y su carpeta local
-            dbSQL.deleteUsuario(usuLogin)
+            if (SharedApp.preferences.bdtype) {
+                val auth = FirebaseAuth.getInstance() // Usuario autentificado
+                val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
+                fbUtils.borradoCompletoUsuario(userID)
 
-            SharedApp.preferences.usuario_logueado = ""
-            SharedApp.preferences.login = false
-            startActivity(Intent(this, Login::class.java))
+            } else {
+                // Elimina el usuario SQLite
+                val usuLogin = SharedApp.preferences.usuario_logueado
+                // Primero Eliminamos todos los tickets de ese usuario
+                val listaTickets = dbSQL.devuelveTickets(usuLogin)
+                for (i in listaTickets.indices) {
+                    dbSQL.deleteTicket(listaTickets[i].idTicket)
+                }
+                // Luego eliminamos el usuario de la BD y su carpeta local
+                dbSQL.deleteUsuario(usuLogin)
+
+                SharedApp.preferences.usuario_logueado = ""
+                SharedApp.preferences.login = false
+                startActivity(Intent(this, Login::class.java))
+            }
         }
 
+
+    }
+
+    /**
+     * Muestra unos pocos registros dependiendo de la opcion para nos sobrecargar el sistemas al cargar todas las fotos
+     */
+    fun listadoFiltrado(opcion: Int, lista: MutableList<Ticket>): MutableList<Ticket> {
+
+        var resultado = mutableListOf<Ticket>()
+
+        when (opcion) {
+
+            // Solo los personales del mes actual
+            1->resultado=lista.filter {((LocalDate.parse(it.fecha_de_compra, DateTimeFormatter.ofPattern("dd-MM-yyyy"))).monthValue)==LocalDate.now().monthValue}.toMutableList()
+            // Solo las Dietas
+            2->resultado=lista.filter {it.isdieta==1}.toMutableList()
+            // Solo los tickets personales
+            3->resultado=lista.filter {it.isdieta==0}.toMutableList()
+
+        }
+
+
+        return resultado
     }
 
 

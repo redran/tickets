@@ -38,12 +38,12 @@ class Ticket: Serializable{
     // Añadido el 20-04-2020
     var isdieta:Int=0 // por defecto No
 
-    var fecha_evio: String=""
-    var metodos_envio:Int=0
-    var enviado_a:String=""
+    var fecha_envio: String?=null
+    var metodo_envio:Int=0
+    var enviado_a:String?=null
 
-    var fecha_cobro: String=""
-    var metodo_cobro:String=""
+    var fecha_cobro: String?=null
+    var metodo_cobro:String?=null
 
 
 

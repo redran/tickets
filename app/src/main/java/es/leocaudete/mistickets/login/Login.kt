@@ -1,8 +1,6 @@
 package es.leocaudete.mistickets.login
 
 import android.content.Intent
-import android.content.SharedPreferences
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
@@ -29,8 +27,9 @@ import kotlinx.android.synthetic.main.login_activity.progressBar
  */
 class Login : AppCompatActivity() {
 
-    // Usamos esta constante para actualizar el schema de Firebase
-    val VERSION_FIREBASE = 3
+    // Usamos esta constante para controlar actualizaciones
+    var NEW_VERSION_APP: String = ""
+    var old_version_firebase="" // Si lo instalo nuevo en preferences el valor por defecto sera x si ya lo tenia sera y
     private lateinit var auth: FirebaseAuth
     lateinit var storageDir: String
     lateinit var dbSQL: SQLiteDB
@@ -43,7 +42,8 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.login_activity)
-
+        old_version_firebase=SharedApp.preferences.oldversionfirebase
+        comprobarVersion()
         // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
         dbSQL = SQLiteDB(this, null)
 
@@ -65,15 +65,14 @@ class Login : AppCompatActivity() {
 
             // Si hemos recordado usuario, entonces tenemos que comprobar si es online u offline
             if (dbcloud) {
-                //Primero tenemos que ver que no exista una actualizacion en el schema de la base
-                // de datos de Firebase (SQLite se encarga el en su DAO).
-                // Entonces tendremos que cerrar la sesion y que se loge para actualziar
-                if(VERSION_FIREBASE>SharedApp.preferences.fbschema){
-                    SharedApp.preferences.login=false
-                    SharedApp.preferences.usuario_logueado=""
-                }else
-                {
+                // Si la version que ejecutamos es mayor que la que tenemos instalada
+                // obligamos a hacer el login para hacer los update necesario
+                if (NEW_VERSION_APP.toDouble() > SharedApp.preferences.oldversionapp.toDouble()) {
+                    SharedApp.preferences.login = false
+                    SharedApp.preferences.usuario_logueado = ""
+                } else {
                     if (auth.currentUser != null) {
+                        SharedApp.preferences.avisounico=0
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }
@@ -81,6 +80,7 @@ class Login : AppCompatActivity() {
 
             } else {
                 if (!TextUtils.isEmpty(userLog)) {
+                    SharedApp.preferences.avisounico=0
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
@@ -99,6 +99,25 @@ class Login : AppCompatActivity() {
             cambiaEstado()
         }
 
+    }
+
+    fun comprobarVersion() {
+        try {
+            var pInfo = applicationContext.packageManager.getPackageInfo(packageName, 0)
+            NEW_VERSION_APP = pInfo.versionName
+
+            // Si estamos ejecutando una version nueva
+            if (NEW_VERSION_APP.toDouble() > SharedApp.preferences.oldversionapp.toDouble()) {
+
+                // Lo primero es eliminar los valores de preferencias como recordar usuario
+                SharedApp.preferences.usuario_logueado = "" // olvidamos usuario SQLite
+                SharedApp.preferences.login = false // Que no recuerde usuario logeado
+
+                // Despues de esto continuara con el Login e instanciara SQLiteDB la cual hará el update
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onStart() {
@@ -157,7 +176,7 @@ class Login : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
 
                     if (task.isSuccessful) {
-                       // upgrafeFirebase()
+                        // upgrafeFirebase()
                         action()
                     } else {
                         Toast.makeText(
@@ -209,6 +228,9 @@ class Login : AppCompatActivity() {
                 SharedApp.preferences.usuario_logueado = dbSQL.buscaIdUsuario(email)
                 storageDir =
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado
+                SharedApp.preferences.oldversionapp=NEW_VERSION_APP
+                SharedApp.preferences.modooperacion=0
+                SharedApp.preferences.avisounico=0
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
                 gestorMensajes.showAlertOneButton("ERROR", "La contraseña no es correcta", this)
@@ -222,80 +244,122 @@ class Login : AppCompatActivity() {
     /**
      * Realiza un upgrade en Firebase para insertar los nuevos
      * campos, dependiendo de la versión
+     * Si la version del schema de Firebase es distinto al nuestro, entonces no podemos iniciar sesion
+     * y tendremos que actualizar la APP
      *
      */
     fun upgrafeFirebase() {
         val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
         val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
         val rutaTickets = "User/" + userID + "/Tickets"
+        var versionFirabaseCloud: String
 
-        if(VERSION_FIREBASE>SharedApp.preferences.fbschema){
-            when (VERSION_FIREBASE) {
-                2 -> {
-                    val data = hashMapOf("categoria" to 0, "precio" to 0.00)
-                    val ticketsRef = dbRef.collection(rutaTickets)
-                        .get()
-                        .addOnSuccessListener { result ->
-                            for (document in result) {
+        // Primero comprobamos que la version de la base de datos coincida con la version de la APP
+        //  que estamos usando o nos fallara el mapeo de datos a objetos
+        var fbversion = dbRef.collection("Info")
+            .document("UUPgCzmmLAk5KJgXB06k")
+            .get()
+            .addOnSuccessListener { document ->
+                if(document==null){
+                    Toast.makeText(this,"Error al acceder a la base de datos", Toast.LENGTH_LONG).show()
+                }else{
+                    versionFirabaseCloud=document["version"].toString()
+                    if(old_version_firebase.toDouble()<versionFirabaseCloud.toDouble()){
+                        when (versionFirabaseCloud.toDouble()) {
+                            2.0 -> {
+                                val data = hashMapOf("categoria" to 1, "precio" to 0.00)
+                                val ticketsRef = dbRef.collection(rutaTickets)
+                                    .get()
+                                    .addOnSuccessListener { result ->
+                                        for (document in result) {
 
-                              var ticket=document["idTicket"].toString()
-                                dbRef.collection(rutaTickets).document(ticket).set(data,
-                                    SetOptions.merge())
+                                            var ticket=document["idTicket"].toString()
+                                            dbRef.collection(rutaTickets).document(ticket).set(data,
+                                                SetOptions.merge())
+                                        }
+                                        // Una vez actualizada, actualizamos la version de la preferencia
+                                        // para que no vuelva a hacerla
+                                        SharedApp.preferences.oldversionapp=NEW_VERSION_APP
+                                        SharedApp.preferences.oldversionfirebase=versionFirabaseCloud
+                                        SharedApp.preferences.modooperacion=0
+                                        SharedApp.preferences.avisounico=0
+                                        startActivity(Intent(this, MainActivity::class.java))
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Toast.makeText(
+                                            this,
+                                            "Se ha producido un error al actualizar la base de datos",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        Log.d(TAG, "Error getting documents:", exception)
+                                    }
                             }
-                            // Una vez actualizada, actualizamos la version de la preferencia
-                            // para que no vuelva a hacerla
-                            SharedApp.preferences.fbschema=VERSION_FIREBASE
-                            startActivity(Intent(this, MainActivity::class.java))
-                        }
-                        .addOnFailureListener { exception ->
-                            Toast.makeText(
-                                this,
-                                "Se ha producido un error al actualizar la base de datos",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            Log.d(TAG, "Error getting documents:", exception)
-                        }
-                }
-                3 -> {
-                    val data = hashMapOf(
-                        "isdieta" to 0,
-                        "fecha_envio" to "",
-                        "metodo_envio" to 0,
-                        "enviado_a" to "",
-                        "fecha_cobro" to "",
-                        "metodo_cobro" to ""
-                    )
-                    val ticketsRef = dbRef.collection(rutaTickets)
-                        .get()
-                        .addOnSuccessListener { result ->
-                            for (document in result) {
+                            3.0 -> {
+                                val data = HashMap<String,Any?>()
+                                // Si partimos de dos versiones anteriores entonces tendremos que agregar
+                                // todos los campos que se han agregado hasta ahora
+                                if(SharedApp.preferences.oldversionfirebase== "1.0"){
+                                    data.put("categoria",1)
+                                    data.put("precio",0.00)
+                                }
+                                data.put("isdieta",0)
+                                data.put("fecha_envio",null)
+                                data.put("metodo_envio",0)
+                                data.put("enviado_a",null)
+                                data.put("fecha_cobro",null)
+                                data.put("metodo_cobro",null)
 
-                                var ticket=document["idTicket"].toString()
-                                dbRef.collection(rutaTickets).document(ticket).set(data,
-                                    SetOptions.merge())
+
+                                val ticketsRef = dbRef.collection(rutaTickets)
+                                    .get()
+                                    .addOnSuccessListener { result ->
+                                        for (document in result) {
+
+                                            var ticket=document["idTicket"].toString()
+                                            dbRef.collection(rutaTickets).document(ticket).set(data,
+                                                SetOptions.merge())
+                                        }
+                                        // Una vez actualizada, actualizamos la version de la preferencia
+                                        // para que no vuelva a hacerla
+                                        SharedApp.preferences.oldversionapp=NEW_VERSION_APP
+                                        SharedApp.preferences.oldversionfirebase=versionFirabaseCloud
+                                        SharedApp.preferences.modooperacion=0
+                                        SharedApp.preferences.avisounico=0
+                                        startActivity(Intent(this, MainActivity::class.java))
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Toast.makeText(
+                                            this,
+                                            "Se ha producido un error al actualizar la base de datos",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        Log.d(TAG, "Error getting documents:", exception)
+                                    }
                             }
-                            // Una vez actualizada, actualizamos la version de la preferencia
-                            // para que no vuelva a hacerla
-                            SharedApp.preferences.fbschema=VERSION_FIREBASE
-                            startActivity(Intent(this, MainActivity::class.java))
+                            else -> {
+                                // Tenemos que prohibir que pueda escribir porque si esta ejecutando una version anterior
+                                // significa que su modelo es antiguo. Puede leer y mapeará los campos que coincidan
+                                // pero si intenta escribir subira el modelo viejo y eso implica que eliminará todos
+                                // los campos nuevos y si usa esa cuenta con una app con la version nueva, abra perdido
+                                // todos los datos añadidos en versiones posteriores a esta
+                                SharedApp.preferences.modooperacion=1 // Se activa el modo lectura
+                                startActivity(Intent(this, MainActivity::class.java))
+                            }
                         }
-                        .addOnFailureListener { exception ->
-                            Toast.makeText(
-                                this,
-                                "Se ha producido un error al actualizar la base de datos",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            Log.d(TAG, "Error getting documents:", exception)
-                        }
-                }
 
+                    }else{
+                        // Si las versiones son iguales entonces o y ase ha actualizado o la actualización es solo de código y no de BD
+                        SharedApp.preferences.modooperacion=0
+                        SharedApp.preferences.avisounico=0
+                        startActivity(Intent(this, MainActivity::class.java))
+                    }
+                }
             }
 
-        }else{
-            startActivity(Intent(this, MainActivity::class.java))
-        }
 
     }
+
+
 
 
 }

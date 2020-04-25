@@ -5,11 +5,14 @@
     <item android:title="@string/menuListado">
         <menu>
             <item
-                android:id="@+id/todo"
-                android:title="@string/menuTodos" />
+                android:id="@+id/personales"
+                android:title="@string/menuPersonales" />
             <item
                 android:id="@+id/caducan"
                 android:title="@string/menuCaduca" />
+            <item
+                android:id="@+id/dietas"
+                android:title="@string/menuDietas" />
         </menu>
     </item>
 

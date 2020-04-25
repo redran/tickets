@@ -159,21 +159,26 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
+        android:onClick="isDietas"
         android:id="@+id/cbDietas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
         android:layout_marginTop="10dp"
         android:text="@string/dietas"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_cat"
-        tools:layout_editor_absoluteX="22dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_cat" />
 
     <RadioGroup
-        android:layout_width="280dp"
+        android:id="@+id/grpDietas"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
         android:layout_marginEnd="21dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="356dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cbDietas">
 
         <RadioButton
             android:id="@+id/rbCobrado"

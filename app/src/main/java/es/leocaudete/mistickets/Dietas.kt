@@ -85,7 +85,7 @@ class Dietas : AppCompatActivity() {
 
                     var fecha = "$dia-$mes-$year"
                     ed_fecha_envio.setText(fecha)
-                    unTicket.fecha_evio = fecha
+                    unTicket.fecha_envio = fecha
                 },
                 year,
                 month,
@@ -154,8 +154,8 @@ class Dietas : AppCompatActivity() {
 
     fun iniciacampos() {
 
-        if (!TextUtils.isEmpty(unTicket.fecha_evio)) {
-            ed_fecha_envio.setText(unTicket.fecha_evio)
+        if (!TextUtils.isEmpty(unTicket.fecha_envio)) {
+            ed_fecha_envio.setText(unTicket.fecha_envio)
         }
         // Rellenamos el Spinner de Metodos de Envio
         val adapterMetodos = ArrayAdapter.createFromResource(
@@ -170,7 +170,7 @@ class Dietas : AppCompatActivity() {
 
         spinner_metodos.adapter = adapterMetodos
 
-        spinner_metodos.setSelection(unTicket.metodos_envio, false)
+        spinner_metodos.setSelection(unTicket.metodo_envio, false)
         comprueba_spinner_metodos()
         if(!TextUtils.isEmpty(unTicket.enviado_a)){
             ed_enviado_a.setText(unTicket.enviado_a)
@@ -208,7 +208,7 @@ class Dietas : AppCompatActivity() {
                 ed_enviado_a.inputType=InputType.TYPE_CLASS_TEXT
             }
         }
-        unTicket.metodos_envio = spinner_metodos.selectedItemPosition
+        unTicket.metodo_envio = spinner_metodos.selectedItemPosition
     }
 
     fun cancelar(view: View) {

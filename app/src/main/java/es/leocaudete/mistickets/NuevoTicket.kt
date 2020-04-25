@@ -219,6 +219,7 @@ class NuevoTicket : AppCompatActivity() {
         )
 
         spinner_categorias.adapter = adapterCategorias
+        spinner_categorias.adapter = adapterCategorias
 
         cb_dietas.isChecked=false
         btn_dietas.visibility=View.GONE

@@ -17,7 +17,11 @@ class Preferences(context:Context) {
     private val LOCAL_DB = "bd"
     private val ID_USU = "id"
     private val DIETA="dieta"
-    private val VERSION_FIREBASE="fbversion"
+    private val OLD_VERSION_APP="oldversionapp"
+    private val OLD_VERSION_FIREBASE="oldversionfirebase"
+    private val MODO_OPERACION="modooperacion"
+    private val AVISO_UNICO_CADUCADOS="avisounico"
+
 
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
@@ -52,7 +56,27 @@ class Preferences(context:Context) {
     /**
      * Almacena la version actual de nuestro schema de Firebase
      */
-    var fbschema:Int
-        get()= prefs.getInt(VERSION_FIREBASE, 1)
-        set(value) = prefs.edit().putInt(VERSION_FIREBASE, value).apply()
+    var oldversionapp:String
+        get()= prefs.getString(OLD_VERSION_APP, "1.0")
+        set(value) = prefs.edit().putString(OLD_VERSION_APP, value).apply()
+
+    /**
+     * Almacena la version actual de nuestro schema de Firebase
+     */
+    var oldversionfirebase:String
+        get()= prefs.getString(OLD_VERSION_FIREBASE, "1.0")
+        set(value) = prefs.edit().putString(OLD_VERSION_FIREBASE, value).apply()
+    /**
+     * Define el modo de operación: Lectura o Lectura y Escritura
+     */
+    var modooperacion:Int
+        get()= prefs.getInt(MODO_OPERACION, 1)
+        set(value) = prefs.edit().putInt(MODO_OPERACION, value).apply()
+    /**
+     * Compruebas que se avise solo una vez al entrar y no cada vez que se lance el Main
+     */
+    var avisounico:Int
+        get()= prefs.getInt(AVISO_UNICO_CADUCADOS, 0)
+        set(value) = prefs.edit().putInt(AVISO_UNICO_CADUCADOS, value).apply()
+
 }

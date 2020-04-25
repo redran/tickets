@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso
 import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
+import es.leocaudete.mistickets.utilidades.ShowMessages
 import kotlinx.android.synthetic.main.activity_nuevo_ticket.*
 import kotlinx.android.synthetic.main.activity_visor_ticket.*
 import java.io.File
@@ -29,6 +30,7 @@ class VisorTicket : AppCompatActivity() {
     lateinit var paramTicket: Ticket
     lateinit var storageDir: String
     lateinit var dbSQL: SQLiteDB
+    var gestorMensajes = ShowMessages()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,6 @@ class VisorTicket : AppCompatActivity() {
         setSupportActionBar(visorTicketsToolBar)
 
 
-
         // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
         dbSQL = SQLiteDB(this, null)
 
@@ -46,7 +47,8 @@ class VisorTicket : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         paramTicket = intent.getSerializableExtra("TicketVisor") as Ticket
-        storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + paramTicket.idTicket
+        storageDir =
+            getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + paramTicket.idTicket
         cargaImgPortada()
         cargarCampos()
 
@@ -55,7 +57,7 @@ class VisorTicket : AppCompatActivity() {
 
     fun cargaImgPortada() {
 
-        if(SharedApp.preferences.bdtype){
+        if (SharedApp.preferences.bdtype) {
             var storageRef = FirebaseStorage.getInstance().reference
             var auth = FirebaseAuth.getInstance()
 
@@ -76,9 +78,9 @@ class VisorTicket : AppCompatActivity() {
                 }
 
             }
-        }else{
-           //lo hacemos desde local
-                 imgPortada.setImageBitmap(BitmapFactory.decodeFile(storageDir + "/" + paramTicket.foto1))
+        } else {
+            //lo hacemos desde local
+            imgPortada.setImageBitmap(BitmapFactory.decodeFile(storageDir + "/" + paramTicket.foto1))
 
         }
 
@@ -100,14 +102,32 @@ class VisorTicket : AppCompatActivity() {
                 true
             }
             R.id.borrar -> {
-                borrarTicket()
+                if (SharedApp.preferences.modooperacion == 1) {
+                    gestorMensajes.showAlertOneButton(
+                        "ALERTA",
+                        "La app está en modo solo lectura y no se permite borrar datos",
+                        this
+                    )
+                } else {
+                    borrarTicket()
+                }
+
                 true
             }
             R.id.editar -> {
-                var intent = Intent(this, NuevoTicket::class.java).apply {
-                    putExtra("updateTicket", paramTicket)
+                if (SharedApp.preferences.modooperacion == 1) {
+                    gestorMensajes.showAlertOneButton(
+                        "ALERTA",
+                        "La app está en modo solo lectura y no se permite la edición",
+                        this
+                    )
+                } else {
+                    var intent = Intent(this, NuevoTicket::class.java).apply {
+                        putExtra("updateTicket", paramTicket)
+                    }
+                    startActivityForResult(intent, 1)
                 }
-                startActivityForResult(intent, 1)
+
                 true
             }
 
@@ -126,7 +146,8 @@ class VisorTicket : AppCompatActivity() {
     // Borra las fotos de Firebase Store
     fun borrarTicket() {
 
-        if(SharedApp.preferences.bdtype){
+
+        if (SharedApp.preferences.bdtype) {
             for (i in 1..4) {
                 when (i) {
                     1 -> borraFoto(i, paramTicket.foto1)
@@ -139,16 +160,18 @@ class VisorTicket : AppCompatActivity() {
             // Esto elimina el ticket de Cloud Firebase con todos sus datos
             val dbRef = FirebaseFirestore.getInstance()
             val ticketRef = dbRef.collection("User").document(paramTicket.idusuario)
-                .collection("Tickets").document(paramTicket.idTicket).delete().addOnSuccessListener {
+                .collection("Tickets").document(paramTicket.idTicket).delete()
+                .addOnSuccessListener {
                     var intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
-        }else{
+        } else {
 
             dbSQL.deleteTicket(paramTicket.idTicket)
             var intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
 
     }
 
@@ -157,9 +180,9 @@ class VisorTicket : AppCompatActivity() {
         /**
         // Comprobamos si existe en local y lo eliminamos
         if (foto != null) {
-            if (File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").exists()) {
-                File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").delete()
-            }
+        if (File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").exists()) {
+        File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").delete()
+        }
         }*/
 
 
@@ -183,10 +206,10 @@ class VisorTicket : AppCompatActivity() {
             tvDireccion.text = "No especificada"
         }
 
-        tvCategoria.text=devuelveCategoria()
+        tvCategoria.text = devuelveCategoria()
         tvGarantia.text = devuelveGarantia()
 
-        tvPrecio.text=paramTicket.precio.toString() + " €"
+        tvPrecio.text = paramTicket.precio.toString() + " €"
     }
 
     fun visorFoto(view: View) {
@@ -231,7 +254,7 @@ class VisorTicket : AppCompatActivity() {
         return ubicacion
     }
 
-    fun devuelveCategoria(): String{
+    fun devuelveCategoria(): String {
         val arrayCategorias = resources.getStringArray(R.array.categorias)
         return arrayCategorias[paramTicket.categoria]
     }

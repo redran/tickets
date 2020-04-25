@@ -72,7 +72,7 @@
 
     <!-- main Menu -->
     <string name="menuListado">Listados rápidos</string>
-    <string name="menuTodos">Todos</string>
+    <string name="menuPersonales">Tickets Personales</string>
     <string name="menuCaduca">Fin de garantía próxima</string>
     <string name="menuDietas">Dietas de empresa</string>
     <string name="menuNuevo">Nuevo ticket</string>

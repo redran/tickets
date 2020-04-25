@@ -163,6 +163,8 @@ class Busquedas : AppCompatActivity() {
 
         cbDietas.isChecked=false
 
+        grpDietas.visibility=View.GONE
+
     }
 
     /**
@@ -277,6 +279,50 @@ class Busquedas : AppCompatActivity() {
                 }
             }
 
+            // Si marcamos dietas filtramos todos los que tengas el campos isDieta a true
+            if(cbDietas.isChecked){
+                if(resTicket.size>0){
+                    resTicket=resTicket.filter {it.isdieta==1 }.toMutableList()
+                }else{
+                    resTicket=tickets.filter {it.isdieta==1}.toMutableList()
+                }
+                if(resTicket.size==0){
+                    listo=false
+                }
+            }
+            if(rbCobrado.isChecked){
+                if(resTicket.size>0){
+                    resTicket=resTicket.filter {it.fecha_cobro!=null}.toMutableList()
+                }else{
+                    resTicket=tickets.filter {it.fecha_cobro!=null}.toMutableList()
+                }
+                if(resTicket.size==0){
+                    listo=false
+                }
+            }
+            if(rbSinCobrar.isChecked){
+                if(resTicket.size>0){
+                    resTicket=resTicket.filter {it.fecha_cobro==null}.toMutableList()
+                }else{
+                    resTicket=tickets.filter {it.fecha_cobro==null}.toMutableList()
+                }
+                if(resTicket.size==0){
+                    listo=false
+                }
+            }
+            if(rbSinPasar.isChecked){
+                if(resTicket.size>0){
+                    resTicket=resTicket.filter {it.fecha_envio==null}.toMutableList()
+                }else{
+                    resTicket=tickets.filter {it.fecha_envio==null}.toMutableList()
+                }
+                if(resTicket.size==0){
+                    listo=false
+                }
+            }
+
+
+
             if (listo && resTicket.size>0) {
 
                 var arrayTickets=ArrayList(resTicket)
@@ -290,6 +336,8 @@ class Busquedas : AppCompatActivity() {
                 resTicket.clear()
 
             }
+
+
         }
     }
 
@@ -298,5 +346,19 @@ class Busquedas : AppCompatActivity() {
      */
     override fun onBackPressed() {
         //
+    }
+
+    /**
+     * Comprueba si se ha marcado dietas o no
+     */
+    fun isDietas(view: View) {
+        if(cbDietas.isChecked){
+            grpDietas.visibility=View.VISIBLE
+        }else{
+            grpDietas.visibility=View.GONE
+            rbCobrado.isChecked=false
+            rbSinCobrar.isChecked=false
+            rbSinPasar.isChecked=false
+        }
     }
 }

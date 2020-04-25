@@ -6,13 +6,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Environment
-import android.os.SharedMemory
 import android.util.Log
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.modelo.Usuario
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.Utilidades
-import java.io.File
 
 /**
  * Esta clase se encargara de enlazar y tratar con la base de datos local SQLite
@@ -24,7 +22,7 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     var utilidades = Utilidades()
 
     companion object {
-        val DATABASE_VERSION = 4
+        val DATABASE_VERSION = 3
         val DATABASE_NAME = "MisTickets.db"
 
         /** Nombre de la tabla **/
@@ -131,16 +129,20 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         if (newVersion > oldVersion) {
             when (newVersion) {
                 2 -> {
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${CATEGORIA} INTEGER DEFAULT 1")
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${PRECIO} REAL DEFAULT 0.0")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${CATEGORIA} INTEGER DEFAULT 1;")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${PRECIO} REAL DEFAULT 0.0;")
                 }
                 3 -> {
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${ISDIETA} INTEGER DEFAULT 0")
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${FECHA_ENVIO} TEXT")
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${METODO_ENVIO} INTEGER DEFAULT 0 ")
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${ENVIADO_A} TEXT")
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${FECHA_COBRO} TEXT")
-                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${METODO_COBRO} TEXT")
+                    if(oldVersion==1){
+                        db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${CATEGORIA} INTEGER DEFAULT 1;")
+                        db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${PRECIO} REAL DEFAULT 0.0;")
+                    }
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${ISDIETA} INTEGER DEFAULT 0;")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${FECHA_ENVIO} TEXT;")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${METODO_ENVIO} INTEGER DEFAULT 0;")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${ENVIADO_A} TEXT;")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${FECHA_COBRO} TEXT;")
+                    db.execSQL("ALTER TABLE ${TABLA_TICKETS} ADD COLUMN ${METODO_COBRO} TEXT;")
                 }
 
 
@@ -211,8 +213,8 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         data.put(CATEGORIA, ticket.categoria)
         data.put(PRECIO, ticket.precio)
         data.put(ISDIETA, ticket.isdieta)
-        data.put(FECHA_ENVIO, ticket.fecha_evio)
-        data.put(METODO_ENVIO, ticket.metodos_envio)
+        data.put(FECHA_ENVIO, ticket.fecha_envio)
+        data.put(METODO_ENVIO, ticket.metodo_envio)
         data.put(ENVIADO_A,ticket.enviado_a)
         data.put(FECHA_COBRO,ticket.fecha_cobro)
         data.put(METODO_COBRO,ticket.metodo_cobro)
@@ -280,8 +282,8 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         data.put(CATEGORIA, ticket.categoria)
         data.put(PRECIO, ticket.precio)
         data.put(ISDIETA, ticket.isdieta)
-        data.put(FECHA_ENVIO, ticket.fecha_evio)
-        data.put(METODO_ENVIO, ticket.metodos_envio)
+        data.put(FECHA_ENVIO, ticket.fecha_envio)
+        data.put(METODO_ENVIO, ticket.metodo_envio)
         data.put(ENVIADO_A,ticket.enviado_a)
         data.put(FECHA_COBRO,ticket.fecha_cobro)
         data.put(METODO_COBRO,ticket.metodo_cobro)
@@ -441,8 +443,8 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                         cursor.getInt(16) // Esta columna es una actualización que se añade a partir de la version 2
                     ticket.precio = cursor.getDouble(17)
                     ticket.isdieta = cursor.getInt(18)
-                    ticket.fecha_evio = cursor.getString(19)
-                    ticket.metodos_envio = cursor.getInt(20)
+                    ticket.fecha_envio = cursor.getString(19)
+                    ticket.metodo_envio = cursor.getInt(20)
                     ticket.enviado_a = cursor.getString(21)
                     ticket.fecha_cobro = cursor.getString(22)
                     ticket.metodo_cobro = cursor.getString(23)

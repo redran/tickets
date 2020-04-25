@@ -40,6 +40,13 @@ class Syncronizar : AppCompatActivity() {
 
         pbCargando.visibility = View.GONE
         tv_cargando.visibility = View.GONE
+
+        if(SharedApp.preferences.modooperacion==1){
+            btn_aceptar.visibility=View.GONE
+            gestorMensajes.showActionOneButton("ALERTA","La app está en modo solo lectura y no se permite la sincronización",this,{lanzaMain()} )
+        }else{
+            btn_aceptar.visibility=View.VISIBLE
+        }
     }
 
     // Anulamos la opción de volver a tras a través del botón del móvil

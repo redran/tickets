@@ -7,8 +7,10 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import es.leocaudete.mistickets.MainActivity
 import es.leocaudete.mistickets.login.Login
@@ -22,8 +24,9 @@ class FirestoreDB(context: Context) {
 
     // Le pasamos el contexto de quien instancia esta clase para poder mostrar los mensajes
     val context = context
-
+    val auth = FirebaseAuth.getInstance() // Usuario autentificado
     val gestorMensajes = ShowMessages()
+    val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
 
 
     // Borra una foto de usuario y de un ticket pasado por parametro
@@ -35,9 +38,6 @@ class FirestoreDB(context: Context) {
 
     // Borra todas las fotos de un Ticket
     fun borraFotosTicket(ticket: Ticket) {
-
-        val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
-        val auth = FirebaseAuth.getInstance() // Usuario autentificado
 
         val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
 
@@ -58,8 +58,6 @@ class FirestoreDB(context: Context) {
     // Borra un ticket
     fun borraTicketsUsuario(ticket: Ticket) {
 
-        val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
-        val auth = FirebaseAuth.getInstance() // Usuario autentificado
         val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
 
         dbRef.collection("User").document(userID)
@@ -69,7 +67,7 @@ class FirestoreDB(context: Context) {
 
     // Elimina el usuario
     fun borraUsuarioFirestore(user: String) {
-        val dbRef = FirebaseFirestore.getInstance()
+
         dbRef.collection("User").document(user).delete()
 
     }
@@ -77,7 +75,6 @@ class FirestoreDB(context: Context) {
     // Borra cuenta FireBase
     fun borraUsuarioFirebase() {
         val user = FirebaseAuth.getInstance().currentUser
-
 
         user?.delete()
             ?.addOnCompleteListener { task ->
@@ -95,8 +92,6 @@ class FirestoreDB(context: Context) {
 
     // Borra un usuario, sus tickets y sus fotos
     fun borradoCompletoUsuario(user: String) {
-
-        val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
 
         val rutaTickets = "User/" + user + "/Tickets"
 
@@ -121,7 +116,6 @@ class FirestoreDB(context: Context) {
             }
 
     }
-
 
     fun lanzaLogin(){
         val intent = Intent(context, Login::class.java)
@@ -178,6 +172,36 @@ class FirestoreDB(context: Context) {
             riverRef.putFile(uri)
         }
 
+    }
+
+    /**
+     * Realiza un upgrade de la base de datos antes de cargar el Main
+     */
+    fun controlversiones(datos: HashMap<String,Any?>, versionFirabaseCloud:String, app_version: String){
+
+        val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
+        val rutaTickets = "User/" + userID + "/Tickets"
+
+        val ticketsRef = dbRef.collection(rutaTickets)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+
+                    var ticket=document["idTicket"].toString()
+                    dbRef.collection(rutaTickets).document(ticket).set(datos,
+                        SetOptions.merge())
+                }
+                // Una vez actualizada, actualizamos la version de la preferencia
+                // para que no vuelva a hacerla
+                SharedApp.preferences.oldversionapp=app_version
+                SharedApp.preferences.oldversionfirebase=versionFirabaseCloud
+                SharedApp.preferences.modooperacion=0
+                SharedApp.preferences.avisounico=0
+                context.startActivity(Intent(context, MainActivity::class.java))
+            }
+            .addOnFailureListener { exception ->
+                gestorMensajes.showAlertOneButton("ERROR", "Se ha producido un error al actualizar la base de datos",context)
+            }
     }
 
 
