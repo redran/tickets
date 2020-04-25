@@ -157,6 +157,12 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         Log.d("onOpen", "Database opened!!")
     }
 
+
+    // UsuarioDAO
+
+    /**
+     * Añade un usuario a la base de datos
+     */
     fun addUser(usuario: Usuario): Long {
 
         // Si no se produce el insert devuelve -1
@@ -191,42 +197,10 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     }
 
-    fun addTicket(ticket: Ticket): Long {
 
-        val data = ContentValues()
-        data.put(ID_TICKET, ticket.idTicket)
-        data.put(USUARIO_TICKET, ticket.idusuario)
-        data.put(DESCRIPCION_COMPRA, ticket.titulo)
-        data.put(ESTABLECIMIENTO, ticket.establecimiento)
-        data.put(FECHA_COMPRA, ticket.fecha_de_compra)
-        data.put(DIRECCION, ticket.direccion)
-        data.put(PROVINCIA, ticket.provincia)
-        data.put(LOCALIDAD, ticket.localidad)
-        data.put(DURACION_GARANTIA, ticket.duracion_garantia)
-        data.put(PERIODO_GARANTIA, ticket.periodo_garantia)
-        data.put(AVISAR_FIN_GARANTIA, ticket.avisar_fin_garantia)
-        data.put(FOTO1, ticket.foto1)
-        data.put(FOTO2, ticket.foto2)
-        data.put(FOTO3, ticket.foto3)
-        data.put(FOTO4, ticket.foto4)
-        data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
-        data.put(CATEGORIA, ticket.categoria)
-        data.put(PRECIO, ticket.precio)
-        data.put(ISDIETA, ticket.isdieta)
-        data.put(FECHA_ENVIO, ticket.fecha_envio)
-        data.put(METODO_ENVIO, ticket.metodo_envio)
-        data.put(ENVIADO_A,ticket.enviado_a)
-        data.put(FECHA_COBRO,ticket.fecha_cobro)
-        data.put(METODO_COBRO,ticket.metodo_cobro)
-
-        //Abrimos la BD en modo escritura
-        val db = this.writableDatabase
-        val insertados = db.insert(TABLA_TICKETS, null, data)
-        db.close()
-
-        return insertados
-    }
-
+    /**
+     * Elimina un usuario de la base de datos
+     */
     fun deleteUsuario(id_usuario: String) {
 
 
@@ -241,58 +215,6 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // Borramos recursivamente la carpeta del almacenamiento interno que tiene como nombre el id de Usuario
         utilidades.delRecFileAndDir(storageDir)
 
-    }
-
-    fun deleteTicket(id_ticket: String) {
-
-        val args = arrayOf(id_ticket)
-        val db = this.writableDatabase
-
-        db.execSQL("DELETE FROM $TABLA_TICKETS WHERE $ID_TICKET=?", args)
-        db.close()
-
-        // Le pasamos la ruta de la carpeta del ticket, que contiene todas las fotos de sus tickets
-        // y borramos las foto y la carpeta
-        var storageDir =
-            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + id_ticket
-        utilidades.delRecFileAndDir(storageDir)
-
-
-    }
-
-    fun updateTicket(ticket: Ticket): Int {
-
-        val args = arrayOf(ticket.idTicket)
-
-        val data = ContentValues()
-        data.put(DESCRIPCION_COMPRA, ticket.titulo)
-        data.put(ESTABLECIMIENTO, ticket.establecimiento)
-        data.put(FECHA_COMPRA, ticket.fecha_de_compra)
-        data.put(DIRECCION, ticket.direccion)
-        data.put(PROVINCIA, ticket.provincia)
-        data.put(LOCALIDAD, ticket.localidad)
-        data.put(DURACION_GARANTIA, ticket.duracion_garantia)
-        data.put(PERIODO_GARANTIA, ticket.periodo_garantia)
-        data.put(AVISAR_FIN_GARANTIA, ticket.avisar_fin_garantia)
-        data.put(FOTO1, ticket.foto1)
-        data.put(FOTO2, ticket.foto2)
-        data.put(FOTO3, ticket.foto3)
-        data.put(FOTO4, ticket.foto4)
-        data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
-        data.put(CATEGORIA, ticket.categoria)
-        data.put(PRECIO, ticket.precio)
-        data.put(ISDIETA, ticket.isdieta)
-        data.put(FECHA_ENVIO, ticket.fecha_envio)
-        data.put(METODO_ENVIO, ticket.metodo_envio)
-        data.put(ENVIADO_A,ticket.enviado_a)
-        data.put(FECHA_COBRO,ticket.fecha_cobro)
-        data.put(METODO_COBRO,ticket.metodo_cobro)
-
-        val db = this.writableDatabase
-        val updateados = db.update(TABLA_TICKETS, data, "$ID_TICKET=?", args)
-        db.close()
-
-        return updateados
     }
 
     /**
@@ -404,6 +326,111 @@ class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         return resultado
     }
+
+
+
+    // TicketDAO
+
+    /**
+     * Añade un ticket a la base de datos
+     */
+    fun addTicket(ticket: Ticket): Long {
+
+        val data = ContentValues()
+        data.put(ID_TICKET, ticket.idTicket)
+        data.put(USUARIO_TICKET, ticket.idusuario)
+        data.put(DESCRIPCION_COMPRA, ticket.titulo)
+        data.put(ESTABLECIMIENTO, ticket.establecimiento)
+        data.put(FECHA_COMPRA, ticket.fecha_de_compra)
+        data.put(DIRECCION, ticket.direccion)
+        data.put(PROVINCIA, ticket.provincia)
+        data.put(LOCALIDAD, ticket.localidad)
+        data.put(DURACION_GARANTIA, ticket.duracion_garantia)
+        data.put(PERIODO_GARANTIA, ticket.periodo_garantia)
+        data.put(AVISAR_FIN_GARANTIA, ticket.avisar_fin_garantia)
+        data.put(FOTO1, ticket.foto1)
+        data.put(FOTO2, ticket.foto2)
+        data.put(FOTO3, ticket.foto3)
+        data.put(FOTO4, ticket.foto4)
+        data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
+        data.put(CATEGORIA, ticket.categoria)
+        data.put(PRECIO, ticket.precio)
+        data.put(ISDIETA, ticket.isdieta)
+        data.put(FECHA_ENVIO, ticket.fecha_envio)
+        data.put(METODO_ENVIO, ticket.metodo_envio)
+        data.put(ENVIADO_A,ticket.enviado_a)
+        data.put(FECHA_COBRO,ticket.fecha_cobro)
+        data.put(METODO_COBRO,ticket.metodo_cobro)
+
+        //Abrimos la BD en modo escritura
+
+        val db = this.writableDatabase
+        val insertados = db.insert(TABLA_TICKETS, null, data)
+        db.close()
+
+        return insertados
+    }
+
+
+    /**
+     * Borra un ticket de la base de datos
+     */
+    fun deleteTicket(id_ticket: String) {
+
+        val args = arrayOf(id_ticket)
+        val db = this.writableDatabase
+
+        db.execSQL("DELETE FROM $TABLA_TICKETS WHERE $ID_TICKET=?", args)
+        db.close()
+
+        // Le pasamos la ruta de la carpeta del ticket, que contiene todas las fotos de sus tickets
+        // y borramos las foto y la carpeta
+        var storageDir =
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + id_ticket
+        utilidades.delRecFileAndDir(storageDir)
+
+
+    }
+
+    /**
+     * Actualiza el ticket pasado como parámetro en la base de datos
+     */
+    fun updateTicket(ticket: Ticket): Int {
+
+        val args = arrayOf(ticket.idTicket)
+
+        val data = ContentValues()
+        data.put(DESCRIPCION_COMPRA, ticket.titulo)
+        data.put(ESTABLECIMIENTO, ticket.establecimiento)
+        data.put(FECHA_COMPRA, ticket.fecha_de_compra)
+        data.put(DIRECCION, ticket.direccion)
+        data.put(PROVINCIA, ticket.provincia)
+        data.put(LOCALIDAD, ticket.localidad)
+        data.put(DURACION_GARANTIA, ticket.duracion_garantia)
+        data.put(PERIODO_GARANTIA, ticket.periodo_garantia)
+        data.put(AVISAR_FIN_GARANTIA, ticket.avisar_fin_garantia)
+        data.put(FOTO1, ticket.foto1)
+        data.put(FOTO2, ticket.foto2)
+        data.put(FOTO3, ticket.foto3)
+        data.put(FOTO4, ticket.foto4)
+        data.put(FECHA_MODIFICACION, ticket.fecha_modificacion)
+        data.put(CATEGORIA, ticket.categoria)
+        data.put(PRECIO, ticket.precio)
+        data.put(ISDIETA, ticket.isdieta)
+        data.put(FECHA_ENVIO, ticket.fecha_envio)
+        data.put(METODO_ENVIO, ticket.metodo_envio)
+        data.put(ENVIADO_A,ticket.enviado_a)
+        data.put(FECHA_COBRO,ticket.fecha_cobro)
+        data.put(METODO_COBRO,ticket.metodo_cobro)
+
+        val db = this.writableDatabase
+        val updateados = db.update(TABLA_TICKETS, data, "$ID_TICKET=?", args)
+        db.close()
+
+        return updateados
+    }
+
+
 
     /**
      *  Devuelve una lista de Tickets obtenida a partir de un id_usuario

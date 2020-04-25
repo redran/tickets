@@ -10,6 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="86e8648e-33b2-4f50-b6ee-03364f16e99c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/LoginNegocio.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/TicketsNegocio.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/UsuarioNegocio.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -18,25 +21,36 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Busquedas.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Busquedas.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Dietas.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Dietas.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/NuevoTicket.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/NuevoTicket.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Syncronizar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Syncronizar.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorTicket.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorTicket.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Busquedas.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Busquedas.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Dietas.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Dietas.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/GestorFotos.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/GestorFotos.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/NuevoTicket.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/NuevoTicket.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Syncronizar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Syncronizar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorFotos.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorFotos.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorTicket.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorTicket.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/adapters/RecyclerAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/adapters/RecyclerAdapter.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/FirestoreDB.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/FirestoreDB.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/SQLiteDB.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/SQLiteDB.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Login.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Login.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/modelo/Ticket.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/modelo/Ticket.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/preferences/Preferences.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/preferences/Preferences.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/estadisticas/Grafica.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Grafica.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/ForgotPass.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/ForgotPass.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Login.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Login.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Registro.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Registro.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_busquedas.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_busquedas.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_dietas.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_dietas.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_forgot_pass.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_forgot_pass.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_gestor_fotos.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_gestor_fotos.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_grafica.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_grafica.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_nuevo_ticket.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_nuevo_ticket.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_registro.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_registro.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_sycronizar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_sycronizar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_visor_fotos.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_visor_fotos.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_visor_ticket.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_visor_ticket.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/login_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/login_activity.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,25 +60,6 @@
   </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
-  </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Login.kt">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="-1411">
-                    <caret line="107" selection-start-line="107" selection-end-line="107" />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="520064b2fab7a40b" />
   <component name="ExternalProjectsData">
@@ -82,30 +77,33 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/FirestoreDB.kt">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/SQLiteDB.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="183" selection-start-line="183" selection-end-line="183" />
+            <state relative-caret-position="2669">
+              <caret line="298" column="37" lean-forward="true" selection-start-line="298" selection-start-column="3" selection-end-line="298" selection-end-column="37" />
               <folding>
-                <element signature="e#1038#1191#0" />
-                <element signature="e#1276#1992#0" />
-                <element signature="e#2061#2433#0" />
-                <element signature="e#2505#2622#0" />
-                <element signature="e#2684#3239#0" />
-                <element signature="e#3335#4178#0" />
-                <element signature="e#4201#4302#0" />
-                <element signature="e#4347#4641#0" />
-                <element signature="e#4852#6214#0" />
+                <element signature="e#5118#6456#0" />
+                <element signature="e#7828#8299#0" />
+                <element signature="e#14457#16572#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/SQLiteDB.kt">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorTicket.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6496">
-              <caret line="448" selection-start-line="448" selection-end-line="448" />
+            <state relative-caret-position="17">
+              <caret line="137" column="6" selection-start-line="137" selection-start-column="6" selection-end-line="137" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorFotos.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="160">
+              <caret line="27" column="2" selection-start-line="27" selection-start-column="2" selection-end-line="27" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -119,6 +117,7 @@
         <option value="resourceFile" />
         <option value="Kotlin Object" />
         <option value="Kotlin File" />
+        <option value="Kotlin Interface" />
         <option value="Kotlin Class" />
       </list>
     </option>
@@ -147,6 +146,9 @@
       <find>isDieta</find>
       <find>isDietas</find>
       <find>revisaGarantias</find>
+      <find>dbSQL</find>
+      <find>auth</find>
+      <find>listadoFiltrado</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -155,19 +157,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Login.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Preferences.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Registro.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/SharedApp.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Ticket.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/ForgotPass.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/RecyclerAdapter.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/login_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/utilidades/utlidades.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/utilidades/ShowMessages.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_forgot_pass.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/modelo/Usuario.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_registro.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/adapters/RecyclerAdapter.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/utilidades/FirestoreUtils.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/ForgotPass.kt" />
@@ -193,7 +182,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_nuevo_ticket.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Dietas.kt" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_dietas.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/SQLiteDB.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Syncronizar.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorTicket.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/modelo/Ticket.kt" />
@@ -205,11 +193,25 @@
         <option value="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/MainActivity.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Login.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dto/dtocloud.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/CloudDAO.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/UserDAO.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/SQLiteDB.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/login_activity.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Login.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/LoginNegocio.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/MainActivity.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/UsuarioNegocio.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/ForgotPass.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Registro.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/FirestoreDB.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/TicketsNegocio.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorFotos.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorTicket.kt" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -264,7 +266,39 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="mistickets" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="login" type="462c0819:PsiDirectoryNode" />
+              <item name="modelo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Mis Tickets" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="mistickets" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="negocio" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Mis Tickets" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="mistickets" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="presentacion" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Mis Tickets" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="mistickets" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="utilidades" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Mis Tickets" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+            </path>
+            <path>
+              <item name="Mis Tickets" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
           </expand>
           <select />
@@ -327,11 +361,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="es.leocaudete.mistickets.presentacion" />
       <recent name="es.leocaudete.mistickets.gps" />
       <recent name="es.leocaudete.mistickets.dao" />
       <recent name="es.leocaudete.mistickets.preferences" />
       <recent name="es.leocaudete.mistickets.modelo" />
-      <recent name="es.leocaudete.mistickets.login" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\formacion\DAM\PMDM_2019-2020\ANDROID\MisTickets\app" />
@@ -426,7 +460,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.19936034" />
@@ -441,9 +474,9 @@
       <window_info anchor="bottom" id="Logcat" order="1" />
       <window_info anchor="bottom" id="TODO" order="2" />
       <window_info anchor="bottom" id="Terminal" order="3" />
-      <window_info anchor="bottom" x="407" y="368" width="1920" height="1040" id="Event Log" order="4" sideWeight="0.40938166" side_tool="true" visible="true" weight="0.061755147" />
-      <window_info anchor="bottom" id="Build" order="5" sideWeight="0.5906183" visible="true" weight="0.061755147" />
-      <window_info anchor="bottom" id="Android Profiler" order="6" show_stripe_button="false" />
+      <window_info anchor="bottom" x="407" y="368" width="1920" height="1040" id="Event Log" order="4" sideWeight="0.40938166" side_tool="true" visible="true" weight="0.17334779" />
+      <window_info anchor="bottom" id="Build" order="5" sideWeight="0.5906183" visible="true" weight="0.17334779" />
+      <window_info anchor="bottom" id="Android Profiler" order="6" />
       <window_info anchor="bottom" id="Run" order="7" sideWeight="0.4946695" weight="0.16359697" />
       <window_info anchor="bottom" id="Debug" order="8" sideWeight="0.80810237" weight="0.15384616" />
       <window_info anchor="bottom" id="Find" order="9" sideWeight="0.49946696" weight="0.32936078" />
@@ -488,19 +521,13 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorTicket.kt</url>
-          <line>181</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorTicket.kt</url>
+          <line>182</line>
           <properties />
           <option name="timeStamp" value="169" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/ForgotPass.kt</url>
-          <line>64</line>
-          <properties />
-          <option name="timeStamp" value="181" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorFotos.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorFotos.kt</url>
           <line>34</line>
           <properties />
           <option name="timeStamp" value="204" />
@@ -518,14 +545,8 @@
           <option name="timeStamp" value="306" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Login.kt</url>
-          <line>324</line>
-          <properties />
-          <option name="timeStamp" value="310" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/MainActivity.kt</url>
-          <line>220</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/MainActivity.kt</url>
+          <line>219</line>
           <properties />
           <option name="timeStamp" value="319" />
         </line-breakpoint>
@@ -547,123 +568,10 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_dietas.xml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="45" column="33" selection-start-line="45" selection-start-column="33" selection-end-line="45" selection-end-column="33" />
-          <folding>
-            <element signature="e#634#656#0" expanded="true" />
-            <element signature="e#1556#1576#0" expanded="true" />
-            <element signature="e#3587#3608#0" expanded="true" />
-            <element signature="e#4564#4583#0" expanded="true" />
-            <element signature="e#5045#5068#0" expanded="true" />
-            <element signature="e#5609#5630#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/android/app/ActivityTransitionState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="141" selection-start-line="141" selection-end-line="141" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/android/view/Window.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="693" selection-start-line="693" selection-end-line="693" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/android/content/res/TypedArray.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="334" selection-start-line="334" selection-end-line="334" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/android/app/FragmentManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="3049" selection-start-line="3049" selection-end-line="3049" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/android/app/FragmentController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="182" selection-start-line="182" selection-end-line="182" />
-          <folding>
-            <element signature="e#5901#5902#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/496a5e4821f66c3275dd4b42ff8e3c0e/jetified-firebase-firestore-21.3.1/jars/classes.jar!/com/google/firebase/firestore/FirebaseFirestore.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="145" selection-start-line="145" selection-end-line="145" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/496a5e4821f66c3275dd4b42ff8e3c0e/jetified-firebase-firestore-21.3.1/jars/classes.jar!/com/google/firebase/firestore/CollectionReference.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="48" selection-start-line="48" selection-end-line="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/496a5e4821f66c3275dd4b42ff8e3c0e/jetified-firebase-firestore-21.3.1/jars/classes.jar!/com/google/firebase/firestore/DocumentReference.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="121" selection-start-line="121" selection-end-line="121" />
-          <folding>
-            <element signature="e#5195#5196#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c040781e35e366f56e3d251ed1c249b1/play-services-tasks-17.0.0/jars/classes.jar!/com/google/android/gms/tasks/zzu.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="87" selection-start-line="87" selection-end-line="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c040781e35e366f56e3d251ed1c249b1/play-services-tasks-17.0.0/jars/classes.jar!/com/google/android/gms/tasks/zzj.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/com/android/internal/os/RuntimeInit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7786">
-          <caret line="499" selection-start-line="499" selection-end-line="499" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/android/database/sqlite/SQLiteOpenHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="55">
-          <caret line="322" selection-start-line="322" selection-end-line="322" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Syncronizar.kt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Syncronizar.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="45" column="12" selection-start-line="45" selection-start-column="12" selection-end-line="45" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorFotos.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="187" column="8" selection-start-line="187" selection-start-column="8" selection-end-line="187" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -707,7 +615,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/NuevoTicket.kt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/NuevoTicket.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2485">
           <caret line="574" column="16" selection-start-line="574" selection-start-column="8" selection-end-line="574" selection-end-column="16" />
@@ -819,17 +727,10 @@
       </provider>
       <provider editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/Busquedas.kt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Busquedas.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="272" column="30" selection-start-line="272" selection-start-column="30" selection-end-line="272" selection-end-column="196" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/VisorTicket.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-748">
-          <caret line="39" column="48" lean-forward="true" selection-start-line="39" selection-start-column="48" selection-end-line="39" selection-end-column="48" />
         </state>
       </provider>
     </entry>
@@ -922,45 +823,180 @@
       </provider>
       <provider selected="true" editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/MainActivity.kt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dto/dtocloud.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="220" column="44" selection-start-line="220" selection-start-column="44" selection-end-line="220" selection-end-column="44" />
+        <state>
+          <caret selection-end-line="9" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dto/dtofirebase.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dto/dtosqlite.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/utilidades/Utilidades.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/utilidades/ShowMessages.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/UserDAO.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="677">
+          <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
           <folding>
-            <element signature="e#2211#3061#0" />
+            <element signature="e#38#121#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/login/Login.kt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/login_activity.xml">
+      <provider editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/LoginNegocio.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1411">
-          <caret line="107" selection-start-line="107" selection-end-line="107" />
+        <state relative-caret-position="175">
+          <caret line="18" column="53" selection-start-line="18" selection-start-column="53" selection-end-line="18" selection-end-column="53" />
+          <folding>
+            <element signature="e#42#393#0" expanded="true" />
+            <element signature="e#570#578#0" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/FirestoreDB.kt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/ForgotPass.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="183" selection-start-line="183" selection-end-line="183" />
+        <state relative-caret-position="-204">
+          <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/CloudDAO.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" column="19" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/MainActivity.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-44">
+          <caret line="35" column="3" lean-forward="true" selection-start-line="35" selection-start-column="3" selection-end-line="37" selection-end-column="20" />
           <folding>
-            <element signature="e#1038#1191#0" />
-            <element signature="e#1276#1992#0" />
-            <element signature="e#2061#2433#0" />
-            <element signature="e#2505#2622#0" />
-            <element signature="e#2684#3239#0" />
-            <element signature="e#3335#4178#0" />
-            <element signature="e#4201#4302#0" />
-            <element signature="e#4347#4641#0" />
-            <element signature="e#4852#6214#0" />
+            <element signature="e#47#1099#0" expanded="true" />
+            <element signature="e#3176#4613#0" />
+            <element signature="e#4755#6777#0" />
+            <element signature="e#6871#6998#0" />
+            <element signature="e#7137#10454#0" />
+            <element signature="e#10809#11126#0" />
+            <element signature="e#14521#14721#1" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Login.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2846">
+          <caret line="189" selection-start-line="189" selection-end-line="189" />
+          <folding>
+            <element signature="e#47#842#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/Registro.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1428">
+          <caret line="106" column="26" selection-start-line="106" selection-start-column="26" selection-end-line="106" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/UsuarioNegocio.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="4" lean-forward="true" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="41" />
+          <folding>
+            <element signature="e#42#717#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/negocio/TicketsNegocio.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="37" column="58" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
+          <folding>
+            <element signature="e#42#684#0" expanded="true" />
+            <element signature="e#1923#5074#0" />
+            <element signature="e#2350#2390#0" expanded="true" />
+            <element signature="e#2425#2472#0" expanded="true" />
+            <element signature="e#5260#6288#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/SQLiteDB.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6496">
-          <caret line="448" selection-start-line="448" selection-end-line="448" />
+        <state relative-caret-position="2669">
+          <caret line="298" column="37" lean-forward="true" selection-start-line="298" selection-start-column="3" selection-end-line="298" selection-end-column="37" />
+          <folding>
+            <element signature="e#5118#6456#0" />
+            <element signature="e#7828#8299#0" />
+            <element signature="e#14457#16572#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorFotos.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="27" column="2" selection-start-line="27" selection-start-column="2" selection-end-line="27" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/dao/FirestoreDB.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="122" column="20" selection-start-line="122" selection-start-column="20" selection-end-line="122" selection-end-column="20" />
+          <folding>
+            <element signature="e#1751#2310#0" />
+            <element signature="e#2850#3404#0" />
+            <element signature="e#4496#4790#0" />
+            <element signature="e#5001#6363#0" />
+            <element signature="e#6484#7958#0" />
+            <element signature="e#8086#11954#0" />
+            <element signature="e#12132#13316#0" />
+            <element signature="e#13400#14677#0" />
+            <element signature="e#14779#15148#0" />
+            <element signature="e#15255#15699#0" />
+            <element signature="e#15724#16173#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/es/leocaudete/mistickets/presentacion/VisorTicket.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="137" column="6" selection-start-line="137" selection-start-column="6" selection-end-line="137" selection-end-column="6" />
         </state>
       </provider>
     </entry>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Busquedas">
+    tools:context=".presentacion.Busquedas">
 
     <EditText
         android:id="@+id/find_ed_localidades"

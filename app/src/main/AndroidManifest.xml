@@ -20,26 +20,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Dietas"></activity>
+        <activity android:name=".presentacion.Dietas"></activity>
         <activity
-            android:name=".estadisticas.Grafica"
+            android:name=".presentacion.Grafica"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Syncronizar" />
-        <activity android:name=".Busquedas" />
+        <activity android:name=".presentacion.Syncronizar" />
+        <activity android:name=".presentacion.Busquedas" />
         <activity
-            android:name=".VisorTicket"
+            android:name=".presentacion.VisorTicket"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".VisorFotos" />
+        <activity android:name=".presentacion.VisorFotos" />
         <activity
-            android:name=".GestorFotos"
+            android:name=".presentacion.GestorFotos"
             android:configChanges="screenSize|orientation" />
         <activity
-            android:name=".NuevoTicket"
+            android:name=".presentacion.NuevoTicket"
             android:configChanges="screenSize|orientation"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".login.ForgotPass" />
+        <activity android:name=".presentacion.ForgotPass" />
         <activity
-            android:name=".login.Login"
+            android:name=".presentacion.Login"
             android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,10 +49,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".login.Registro"
+            android:name=".presentacion.Registro"
             android:configChanges="screenSize|orientation" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentacion.MainActivity"
             android:configChanges="screenSize|orientation"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
