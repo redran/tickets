@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.negocio.TicketsNegocio
 import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_busquedas.*
 import java.time.LocalDate
@@ -26,16 +27,15 @@ import kotlin.collections.ArrayList
  */
 class Busquedas : AppCompatActivity() {
 
+    var ticketsNegocio = TicketsNegocio(this)
     private val TAG = "DocSnippets"
     var tickets = mutableListOf<Ticket>()
-    lateinit var dbSQL: SQLiteDB
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_busquedas)
 
-        dbSQL = SQLiteDB(this, null)
         tvCargando.visibility=View.VISIBLE
         pb_cargando.visibility=View.VISIBLE
         btbuscar.visibility=View.GONE
@@ -78,7 +78,7 @@ class Busquedas : AppCompatActivity() {
                 }
         } else {
             // Off-Line. Se carga de SQLite
-            var ticketsUsu = dbSQL.devuelveTickets(SharedApp.preferences.usuario_logueado)
+            var ticketsUsu =   ticketsNegocio.getTicketsOffLine(SharedApp.preferences.usuario_logueado)
             if ((ticketsUsu).size > 0) {
                 for (i in ticketsUsu.indices) {
                     tickets.add(ticketsUsu[i])
@@ -198,6 +198,9 @@ class Busquedas : AppCompatActivity() {
         filtrar()
     }
 
+    /**
+     * Aplica todo los filtros
+     */
     fun filtrar(){
         var listo: Boolean = true
         var resTicket= mutableListOf<Ticket>()

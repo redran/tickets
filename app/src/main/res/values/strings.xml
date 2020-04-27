@@ -10,6 +10,7 @@
     <string name="online">On-Line </string>
     <string name="barra">/ </string>
     <string name="offline">Off-Line </string>
+    <string name="carga">Espere mientras se comprueban los datos</string>
     <string name="sw"></string>
     <!-- Registro -->
     <string name="bt_registro">Registrar Usuario</string>

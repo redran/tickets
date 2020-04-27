@@ -15,8 +15,10 @@ import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.negocio.LoginNegocio
+import es.leocaudete.mistickets.negocio.TicketsNegocio
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.ShowMessages
+import es.leocaudete.mistickets.utilidades.Utilidades
 import kotlinx.android.synthetic.main.login_activity.*
 import kotlinx.android.synthetic.main.login_activity.ed_password
 
@@ -27,13 +29,14 @@ import kotlinx.android.synthetic.main.login_activity.ed_password
 class Login : AppCompatActivity() {
 
     lateinit var loginNegocio:LoginNegocio
+    var ticketsNegocio=TicketsNegocio(this)
+    val utils = Utilidades()
 
     // Usamos esta constante para controlar actualizaciones
     var NEW_VERSION_APP: String = ""
     var old_version_firebase="" // Si lo instalo nuevo en preferences el valor por defecto sera x si ya lo tenia sera y
     private lateinit var auth: FirebaseAuth
-    lateinit var storageDir: String
-    lateinit var dbSQL: SQLiteDB
+
 
     private val TAG = "DocSnippets"
     var tickets = mutableListOf<Ticket>() // va a lamacenar todos los tickets
@@ -47,12 +50,9 @@ class Login : AppCompatActivity() {
         // Creamos nuestra instancia de la capa de negocio
         loginNegocio=LoginNegocio(this,NEW_VERSION_APP)
 
-
         old_version_firebase=SharedApp.preferences.oldversionfirebase
-        // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
-        dbSQL = SQLiteDB(this, null)
+        // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD )
 
-        auth = FirebaseAuth.getInstance()
         /*  SharedApp.preferences.usuario_logueado = ""
           SharedApp.preferences.bdtype = swbd.isChecked*/
 
@@ -76,8 +76,9 @@ class Login : AppCompatActivity() {
                     SharedApp.preferences.login = false
                     SharedApp.preferences.usuario_logueado = ""
                 } else {
-                    if (auth.currentUser != null) {
+                    if (ticketsNegocio.getIdUsuarioFB() != null) {
                         SharedApp.preferences.avisounico=0
+                        utils.delRecFileAndDir(ticketsNegocio.rutaLocalFb())
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }
@@ -93,7 +94,7 @@ class Login : AppCompatActivity() {
 
         } else {
             if (dbcloud) {
-                auth.signOut()
+                loginNegocio.logOutFb()
             } else {
                 SharedApp.preferences.usuario_logueado = ""
 
@@ -102,6 +103,8 @@ class Login : AppCompatActivity() {
             cb_recordar.isChecked = false
             swbd.isChecked = true
             cambiaEstado()
+            pricipal.visibility=View.VISIBLE
+            carga.visibility=View.GONE
         }
 
     }
@@ -182,9 +185,9 @@ class Login : AppCompatActivity() {
         val password: String = ed_password.text.toString()
 
         if (swbd.isChecked) {
-            loginNegocio.loginOnLine(user, password)
+            loginNegocio.loginOnLine(user, password, pricipal,carga)
         } else {
-            loginNegocio.loginOffLine(user, password)
+            loginNegocio.loginOffLine(user, password,pricipal,carga)
         }
     }
 

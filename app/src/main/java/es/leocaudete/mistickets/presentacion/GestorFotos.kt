@@ -3,18 +3,18 @@ package es.leocaudete.mistickets.presentacion
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
 import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.negocio.TicketsNegocio
 import es.leocaudete.mistickets.preferences.SharedApp
 import kotlinx.android.synthetic.main.activity_gestor_fotos.*
 import java.io.ByteArrayOutputStream
@@ -27,31 +27,26 @@ import java.io.IOException
  */
 class GestorFotos: AppCompatActivity() {
 
+    var ticketsNegocio= TicketsNegocio(this)
 
     lateinit var unTicket: Ticket
     lateinit var storageDir: String
     var isEdited: Boolean = false
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gestor_fotos)
 
-        auth = FirebaseAuth.getInstance()
-
-
         // Recuperamos el ticket y seguimos rellenando los datos con las fotos
         unTicket = intent.getSerializableExtra("unTicket") as Ticket
         isEdited = intent.getBooleanExtra("isEdited", false)
 
-        if (SharedApp.preferences.bdtype) {
-            storageDir =
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
-
+        if(SharedApp.preferences.bdtype) {
+            storageDir =ticketsNegocio.rutaLocalFb()
         } else {
             // Para la primera vez, vemmos si el directorio existe, sino, lo creamos
-            storageDir =
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
+            storageDir =ticketsNegocio.rutaLocal(unTicket.idTicket)
+
 
 
         }
@@ -242,79 +237,53 @@ class GestorFotos: AppCompatActivity() {
     }
 
     /**
-     * si hay imagen la cargamos
+     * si hay imagen la cargamos.
      */
     fun cargaInicial() {
-
 
         // No hay imagen
         if (unTicket.foto1 == null) {
             img_foto1.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
             if (SharedApp.preferences.bdtype) {
-                descargaFotoCloudInicial(1)
+                ticketsNegocio.descargaFotoCloudInicial(unTicket.foto1.toString(),img_foto1)
             }else{
                 img_foto1.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto1))
             }
-
-
         }
 
         if (unTicket.foto2 == null) {
             img_foto2.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
             if (SharedApp.preferences.bdtype) {
-                descargaFotoCloudInicial(2)
+                ticketsNegocio.descargaFotoCloudInicial(unTicket.foto2.toString(),img_foto2)
             }else{
                 img_foto2.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto2))
             }
-
         }
 
         if (unTicket.foto3 == null) {
             img_foto3.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
             if (SharedApp.preferences.bdtype) {
-                descargaFotoCloudInicial(3)
+                ticketsNegocio.descargaFotoCloudInicial(unTicket.foto3.toString(),img_foto3)
             }else{
                 img_foto3.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto3))
             }
-
         }
 
         if (unTicket.foto4 == null) {
             img_foto4.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
         } else {
             if (SharedApp.preferences.bdtype) {
-               descargaFotoCloudInicial(4)
+                ticketsNegocio.descargaFotoCloudInicial(unTicket.foto4.toString(),img_foto4)
             }else{
                 img_foto4.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto4))
             }
-
         }
     }
 
-    // DEscarga de cloud y cuando el hilo termina, entonces asigna la imagen al ImageView
-    fun descargaFotoCloudInicial(i: Int){
-        var storageRef = FirebaseStorage.getInstance().reference
-        var rutaFoto = auth.currentUser?.uid.toString() + "/" + unTicket.idTicket + "_foto" + i + ".jpg"
-        var imgRef = storageRef.child(rutaFoto)
 
-        // Comprobamos si el fichero existe en nuestro directorio
-        var file =
-            File(storageDir + "/" + unTicket.idTicket + "_foto" + i + ".jpg")
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-        imgRef.getFile(file).addOnSuccessListener {
-            when(i){
-                1->img_foto1.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto1))
-                2->img_foto2.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto2))
-                3->img_foto3.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto3))
-                4->img_foto4.setImageURI(Uri.parse(storageDir + "/" + unTicket.foto4))
-            }
-        }.addOnFailureListener {}
-    }
 
 
 }

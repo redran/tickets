@@ -21,6 +21,7 @@ import com.google.firebase.storage.FirebaseStorage
 import es.leocaudete.mistickets.R
 import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.negocio.TicketsNegocio
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.ShowMessages
 import es.leocaudete.mistickets.utilidades.Utilidades
@@ -34,21 +35,21 @@ import java.util.*
  */
 class NuevoTicket : AppCompatActivity() {
 
-    // Creamos una instancia de nuestro modelo para ir guardando los datos introducidos
-    var unTicket = Ticket()
-    var enEdicion: Boolean = false // Nos indica si hemos entrado para editar o para insertar
-    private lateinit var auth: FirebaseAuth
+    var ticketsNegocio = TicketsNegocio(this)
+    var utils = Utilidades()
     var gestorMensajes = ShowMessages()
 
+    // Creamos una instancia de nuestro modelo para ir guardando los datos introducidos
+    var unTicket = Ticket()
+    // enEdicion indica si hemos entrado para editar o para insertar
+    var enEdicion: Boolean = false
+    // Indica la ruta local donde se guardaran las fotos
     lateinit var storageLocalDir: String
-    lateinit var dbSQL: SQLiteDB
-    var utils = Utilidades()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nuevo_ticket)
-
 
         // le decimos lo que va ha ahacer el bton de calendarioo
         img_calendar.setOnClickListener {
@@ -100,59 +101,65 @@ class NuevoTicket : AppCompatActivity() {
             dpd.show()
         }
 
-        // Asociamos el ticket con el usuario
-        auth = FirebaseAuth.getInstance()
-
+        // Asignamos al nuevo ticket que hemos creado el id de usuario
+        // y cargamos la ruta a las imagenes
         if (SharedApp.preferences.bdtype) {
-            unTicket.idusuario = auth.currentUser?.uid.toString()
+            unTicket.idusuario = ticketsNegocio.getIdUsuarioFB()
+            storageLocalDir = ticketsNegocio.rutaLocalFb()
         } else {
             unTicket.idusuario = SharedApp.preferences.usuario_logueado
+            storageLocalDir = ticketsNegocio.rutaLocal(unTicket.idTicket)
         }
 
+        // Inicializa los spinner y el resto de campos
         inicializaCampos()
 
+
+        // Comprueba si ha recibido algo.
+        // En caso de edición recibira el ticket para editar
         if (intent.getSerializableExtra("updateTicket") != null) {
             unTicket = intent.getSerializableExtra("updateTicket") as Ticket
             enEdicion = true
             rellenaCampos()
             btn_aceptar.text = getString(R.string.update)
-            //Descargamos las fotos en local para que no nos de error al actualizar
+            // Borra las fotos con la marca edited_ que se hubieran quedado en el directorio
+            // al cerrar mal la aplicación mientras estabamos editando
+            borraFotoTemporal()
         }
-
-        // Ruta de acceso al directorio local donde se guardan las imagenes
+        // Asignamos al nuevo ticket que hemos creado el id de usuario
+        // y cargamos la ruta a las imagenes
         if (SharedApp.preferences.bdtype) {
-            storageLocalDir =
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + auth.currentUser?.uid.toString()
+            unTicket.idusuario = ticketsNegocio.getIdUsuarioFB()
+            storageLocalDir = ticketsNegocio.rutaLocalFb()
         } else {
-            storageLocalDir =
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/" + SharedApp.preferences.usuario_logueado + "/" + unTicket.idTicket
+            unTicket.idusuario = SharedApp.preferences.usuario_logueado
+            storageLocalDir = ticketsNegocio.rutaLocal(unTicket.idTicket)
         }
+        // Por si acaso todavía no exite, creamos el directorio local del ticket
+        // Lo creamos aqui porque si estamos editando, me creará una nueva carpeta con id del nuevo ticket que se crea justo antes
         val home_dir = File(storageLocalDir)
         if (!home_dir.exists()) {
             home_dir.mkdirs()
         }
 
+
         // Cargamos nuestra toolbar.
         setSupportActionBar(toolbar)
-
-        // Instanciamos la clase que crea la base de datos y tiene nuestro CRUD
-        dbSQL = SQLiteDB(this, null)
 
     }
 
 
-    // habilitamos los campos para edicion y le ponemos el valor de el ticket que hemos recibido
+    /**
+     * Habilitamos los campos para edicion y le ponemos el valor del ticket que hemos recibido
+     */
     private fun rellenaCampos() {
-        // Rellenamos nuestra instancia del objeto Ticket con los campos que hallamos rellenado
 
         ed_descripcion.setText(unTicket.titulo)
         ed_tienda.setText(unTicket.establecimiento)
-        ed_direccion.setText(unTicket.direccion)
 
-        ed_localidades.setText(unTicket.localidad)
         text_fecha.setText(unTicket.fecha_de_compra)
 
-        this.spinner_provincias.setSelection(unTicket.provincia, false)
+
         this.spinner_categorias.setSelection(unTicket.categoria, false)
         this.spinner_garantia.setSelection(unTicket.duracion_garantia, false)
 
@@ -163,35 +170,22 @@ class NuevoTicket : AppCompatActivity() {
 
         etPrecio.setText(unTicket.precio.toString())
 
-       if(unTicket.isdieta==0){
-           cb_dietas.isChecked=false
-           btn_dietas.visibility=View.GONE
-       }else{
-           cb_dietas.isChecked=true
-           btn_dietas.visibility=View.VISIBLE
-       }
-
-
+        if (unTicket.isdieta == 0) {
+            cb_dietas.isChecked = false
+            btn_dietas.visibility = View.GONE
+        } else {
+            cb_dietas.isChecked = true
+            btn_dietas.visibility = View.VISIBLE
+        }
     }
 
-    // Rellenamos los Spinner y colocamos los valores por defecto
+    /**
+     * Rellenamos los Spinner y colocamos los valores por defecto
+     */
     private fun inicializaCampos() {
 
         // por defecto seleccionamos Años en garantia
         rd_annos.isSelected = true
-
-        // Rellenamos el Spinner de Provincias
-        val adapterProvincias = ArrayAdapter.createFromResource(
-            this,
-            R.array.provincias,
-            android.R.layout.simple_spinner_item
-        )
-
-        adapterProvincias.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        spinner_provincias.adapter = adapterProvincias
 
 
         // Rellenamos el Spinner de tiempo de garantía
@@ -222,45 +216,59 @@ class NuevoTicket : AppCompatActivity() {
         spinner_categorias.adapter = adapterCategorias
         spinner_categorias.adapter = adapterCategorias
 
-        cb_dietas.isChecked=false
-        btn_dietas.visibility=View.GONE
+        cb_dietas.isChecked = false
+        btn_dietas.visibility = View.GONE
 
 
     }
 
 
-    // Anulamos la opción de volver a tras a través del botón del móvil
+    /**
+     * Anulamos la opción de volver a tras a través del botón del móvil
+     */
     override fun onBackPressed() {
         //
     }
 
+    /**
+     * Comprobamos la respuesta de las activity que hemos lanzado con startActivityForResult
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-       // Hemos llamado al gestor de fotos
+        // Hemos llamado al gestor de fotos
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 unTicket = data?.getSerializableExtra("unTicket") as Ticket
                 enEdicion = data?.getBooleanExtra("updateTicket", false)
-
             }
 
         }
         // Hemos llamado al gestor de dietas
-        if(requestCode==2){
-            if(resultCode==Activity.RESULT_OK){
-                unTicket= data?.getSerializableExtra("unTicket") as Ticket
+        if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                unTicket = data?.getSerializableExtra("unTicket") as Ticket
+            }
+        }
+        // Hemos llamado al gestor de direcciones
+        if (requestCode == 3) {
+            if (resultCode == Activity.RESULT_OK) {
+                unTicket = data?.getSerializableExtra("unTicket") as Ticket
             }
         }
     }
 
-    // inflamos nuestro menu
+    /**
+     * Inflamos nuestro menu
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.new_tickets_menu, menu)
         return true
     }
 
-    // definimos las acciones para los elementos del menu
+    /**
+     * Definimos las acciones para los elementos del menu
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -280,137 +288,52 @@ class NuevoTicket : AppCompatActivity() {
                 startActivityForResult(myIntent, 1)
                 true
             }
+            R.id.gestiondirecciones -> {
+                val myIntent = Intent(this, Direccion::class.java).apply {
+                    putExtra("Ticket", unTicket)
+
+                }
+                startActivityForResult(myIntent, 3)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
 
         }
     }
 
+    /**
+     * Inserta un nuevo Ticket
+     */
     fun insertar(view: View) {
 
         if (validacion()) {
             rellenaObjeto()
+            //
+            ticketsNegocio.renombraFotosTemp(unTicket, storageLocalDir)
             if (SharedApp.preferences.bdtype) {
-                /**
-                 * Con firebase se le pasa un ticket
-                 * Si es Nuevo habra creado un id_ticket al pulsar sobre nuevoTicket
-                 * Si es Aatualizacion se pasa el ticket con el mismo id y lo chafa
-                 */
-                val dbRef = FirebaseFirestore.getInstance()
-                grabaFoto(1, unTicket.foto1, false)
-                grabaFoto(2, unTicket.foto2, false)
-                grabaFoto(3, unTicket.foto3, false)
-                grabaFoto(4, unTicket.foto4, false)
-                val ticketRef = dbRef.collection("User").document(unTicket.idusuario)
-                    .collection("Tickets").document(unTicket.idTicket)
-                    .set(unTicket)
-                    .addOnSuccessListener {
-
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                            this,
-                            "No se ha podido registrar el Ticket",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                ticketsNegocio.subeFoto_A_Cloud(unTicket, ticketsNegocio.rutaLocalFb())
+                ticketsNegocio.insertaTicketFb(unTicket, 1)
             } else {
-                /**
-                 * Si por el contrario trabajamos co SQLite, al ser una base relacional, tenemos que distinguir y hacer Insert o Update
-                 */
-                grabaFoto(1, unTicket.foto1, true)
-                grabaFoto(2, unTicket.foto2, true)
-                grabaFoto(3, unTicket.foto3, true)
-                grabaFoto(4, unTicket.foto4, true)
+
                 if (enEdicion) {
-                    if (dbSQL.updateTicket(unTicket) > 0) {
-                        startActivity(Intent(this, MainActivity::class.java))
-                    } else {
-                        gestorMensajes.showAlertOneButton(
-                            "ERROR",
-                            "Error al actualizar el ticket",
-                            this
-                        )
-                    }
+                    ticketsNegocio.updateTicketLocal(unTicket)
                 } else {
-                    if (dbSQL.addTicket(unTicket) > 0) {
-                        startActivity(Intent(this, MainActivity::class.java))
-                    } else {
-                        gestorMensajes.showAlertOneButton(
-                            "ERROR",
-                            "Error al insertar el ticket",
-                            this
-                        )
-                    }
+                    ticketsNegocio.insertaTicketLocal(unTicket)
                 }
-
-
             }
-
-
         }
     }
 
-
-    // Graba foto
-    fun grabaFoto(numFoto: Int, fotoTicket: String?, local: Boolean) {
-
-        // Para ambos casos tenemos que verificar si es edicion para renombrar
-
-        var strFoto: String = unTicket.idTicket + "_foto" + numFoto + ".jpg"
-
-        if (enEdicion) {
-            // Si estamos editando entonces renombramos primero los jpg
-            var file =
-                File(storageLocalDir + "/" + "edited_" + unTicket.idTicket + "_foto" + numFoto + ".jpg")
-            if (file.exists()) {
-                file.renameTo(File("$storageLocalDir/$strFoto"))
-            }
-
-        }
-
-        // Guardamos en la nube, en SQLite se guarda el fichero nada mas realizar la foto
-        if (fotoTicket != null) {
-            // Ahora tenemos que comprobar si existe en local ya que hemos podido entrar en Edición y no modificar
-            // las fotos y entonces este directorio esta vacio porque ni se ham creado ni se han descargado
-            var fotoLocal = File("$storageLocalDir/$strFoto")
-            if(fotoLocal.exists()){
-                if (!local) {
-                    var storageRef = FirebaseStorage.getInstance().reference
-                    var riverRef =
-                        storageRef.child(auth.currentUser?.uid.toString() + "/" + unTicket.idTicket + "_foto" + numFoto + ".jpg")
-
-                    // var uri=Uri.parse(storageLocalDir + "/" + unTicket.idTicket + "_foto"+numFoto+".jpg")
-                    var uri = Uri.fromFile(File("$storageLocalDir/$strFoto"))
-                    var uploadTask = riverRef.putFile(uri)
-                }
-            }
-            // Si no existe, entonces estamos editando y no se ha modificado la foto
-
-
-
-        }
-
-
-    }
-
-    // Rellenamos nuestra instancia del objeto Ticket con los campos que hallamos rellenado
+    /**
+     * Rellenamos nuestra instancia del objeto Ticket con los campos que hallamos rellenado
+     */
     fun rellenaObjeto() {
 
 
         unTicket.titulo = ed_descripcion.text.toString().toUpperCase()
         unTicket.establecimiento = ed_tienda.text.toString().toUpperCase()
-        if (!TextUtils.isEmpty(ed_direccion.text)) {
-            unTicket.direccion = ed_direccion.text.toString().toUpperCase()
 
-        }
-        if (spinner_provincias.selectedItemPosition > 0) {
-            unTicket.provincia = spinner_provincias.selectedItemPosition
-        }
-        if (!TextUtils.isEmpty(ed_localidades.text)) {
-            unTicket.localidad = ed_localidades.text.toString().toUpperCase()
-        }
+
         if (spinner_garantia.selectedItemPosition > 0) {
             unTicket.duracion_garantia = spinner_garantia.selectedItemPosition
         }
@@ -426,7 +349,7 @@ class NuevoTicket : AppCompatActivity() {
             unTicket.avisar_fin_garantia = 0
         }
 
-        unTicket.categoria=spinner_categorias.selectedItemPosition
+        unTicket.categoria = spinner_categorias.selectedItemPosition
 
 
         // Si estamos editando tenemos que cambiar la referencia a las fotos
@@ -449,20 +372,22 @@ class NuevoTicket : AppCompatActivity() {
             .seconds.toString() // Siempre guardamos la fecha de modificación para syncronizar
 
         // Si tiene algún valor en precio se pone sino por defecto al crear el objeto se pone 0.0
-        if(!TextUtils.isEmpty(etPrecio.text)){
-            var precio = String.format("%.2f",etPrecio.text.toString().toDouble())
-            var precioCambiado=precio.replace(',','.').toDouble()
-            unTicket.precio=precioCambiado
+        if (!TextUtils.isEmpty(etPrecio.text)) {
+            var precio = String.format("%.2f", etPrecio.text.toString().toDouble())
+            var precioCambiado = precio.replace(',', '.').toDouble()
+            unTicket.precio = precioCambiado
         }
 
-        if(cb_dietas.isChecked){
-            unTicket.isdieta=1
-        }else{
-            unTicket.isdieta=0
+        if (cb_dietas.isChecked) {
+            unTicket.isdieta = 1
+        } else {
+            unTicket.isdieta = 0
         }
     }
 
-    // Validamos que todos los campos obligatorios tengan datos y también que los que no son obligatios cumplan con una serie de criterios
+    /**
+     * Validamos que todos los campos obligatorios tengan datos y también que los que no son obligatios cumplan con una serie de criterios
+     */
     fun validacion(): Boolean {
         var resultado: Boolean = true
 
@@ -498,95 +423,95 @@ class NuevoTicket : AppCompatActivity() {
                         ).show()
                         resultado = false
                     } else {
-                        if (!TextUtils.isEmpty(ed_localidades.text) && spinner_provincias.selectedItemPosition == 0) {
+                        if (spinner_categorias.selectedItemPosition == 0) {
                             Toast.makeText(
                                 this,
-                                "Si especificas una localidad tienes que seleccionar una provncia",
+                                "Debes seleccionar una categoría.",
                                 Toast.LENGTH_LONG
                             ).show()
                             resultado = false
-                        }else{
-                            if(spinner_categorias.selectedItemPosition==0){
+                        } else {
+                            if (TextUtils.isEmpty(etPrecio.text)) {
                                 Toast.makeText(
                                     this,
-                                    "Debes seleccionar una categoría.",
+                                    "Introduce el precio para poder usar otras características de la App.",
                                     Toast.LENGTH_LONG
                                 ).show()
                                 resultado = false
-                            }else{
-                                if(TextUtils.isEmpty(etPrecio.text)){
-                                    Toast.makeText(
-                                        this,
-                                        "Introduce el precio para poder usar otras características de la App.",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    resultado = false
-                                }
                             }
                         }
                     }
                 }
-
             }
 
         }
-
-
         return resultado
     }
 
-    /*
-    Cacela la inserccion y elimina las fotos que se hayan creado
-     */
-    fun cancelarInsert(view: View) {
-
-        // Si estamos insertando eliminadmos el directorio local creado y ya
-        // porque el ticket esta en memoria y se borrara al salir de la activity
-        if (!enEdicion || SharedApp.preferences.bdtype) {
-            utils.delRecFileAndDir(storageLocalDir)
-        } else {
-            // si estamos editando o en Local, borramos las fotos marcadas como edited
-            borraFotoTemporal()
 
 
-        }
+/**
+ *  Cancela la inserccion y elimina las fotos que se hayan creado
+ */
+fun cancelarInsert(view: View) {
 
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
-
+    // Si estamos insertando eliminadmos el directorio local creado y ya
+    // porque el ticket esta en memoria y se borrara al salir de la activity
+    if (!enEdicion || SharedApp.preferences.bdtype) {
+        utils.delRecFileAndDir(storageLocalDir)
+    } else {
+        // si estamos editando o en Local, borramos las fotos marcadas como edited
+        borraFotoTemporal()
     }
 
-    /*
-    Elimina las fotos del directorio local donde se ha guardado temporalmente
-     */
-    fun borraFotoTemporal() {
+    startActivity(Intent(this, MainActivity::class.java))
+    finish()
 
-        for(i in 1..4){
-            // Comprobamos si existe en local y lo eliminamos
-            if (File(storageLocalDir + "/" + "edited_" + unTicket.idTicket + "_foto" + i + ".jpg").exists()) {
-                File(storageLocalDir + "/" + "edited_" + unTicket.idTicket + "_foto" + i + ".jpg").delete()
-            }
-        }
+}
 
-    }
+/**
+ *
+ * Elimina las fotos del directorio local donde se ha guardado temporalmente
+ */
+fun borraFotoTemporal() {
 
-    /**
-     * Comprueba si se ha marcado dietas o no
-     */
-    fun isDietas(view: View) {
-        if(cb_dietas.isChecked){
-            btn_dietas.visibility=View.VISIBLE
-        }else{
-            btn_dietas.visibility=View.GONE
+    for (i in 1..4) {
+        // Comprobamos si existe en local y lo eliminamos
+        if (File(storageLocalDir + "/" + "edited_" + unTicket.idTicket + "_foto" + i + ".jpg").exists()) {
+            File(storageLocalDir + "/" + "edited_" + unTicket.idTicket + "_foto" + i + ".jpg").delete()
         }
     }
-    fun gestdietas(view: View) {
-        val myIntent = Intent(this, Dietas::class.java).apply {
-            putExtra("Ticket", unTicket)
+}
 
-        }
-        startActivityForResult(myIntent, 2)
+/**
+ * Comprueba si se ha marcado dietas o no
+ */
+fun isDietas(view: View) {
+    if (cb_dietas.isChecked) {
+        btn_dietas.visibility = View.VISIBLE
+    } else {
+        btn_dietas.visibility = View.GONE
+        // Borramos todos los datos que tuviera
+        unTicket.fecha_envio=null
+        unTicket.metodo_envio=0
+        unTicket.enviado_a=null
+        unTicket.fecha_cobro=null
+        unTicket.metodo_cobro=null
     }
+}
+
+/**
+ * Abre la activity Dietas y le pasa el ticket actual
+ */
+fun gestdietas(view: View) {
+    val myIntent = Intent(this, Dietas::class.java).apply {
+        putExtra("Ticket", unTicket)
+
+    }
+    startActivityForResult(myIntent, 2)
+}
+
+
 
 
 }

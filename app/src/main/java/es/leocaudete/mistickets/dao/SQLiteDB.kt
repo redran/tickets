@@ -13,6 +13,7 @@ import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.Utilidades
 
 /**
+ * @author Leonardo Caudete Palau 2º Dam Semi
  * Esta clase se encargara de enlazar y tratar con la base de datos local SQLite
  */
 class SQLiteDB(context: Context, factory: SQLiteDatabase.CursorFactory?) :

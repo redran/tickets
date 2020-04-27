@@ -17,6 +17,7 @@ import es.leocaudete.mistickets.utilidades.ShowMessages
 import kotlinx.android.synthetic.main.activity_forgot_pass.*
 
 /**
+ * @author Leonardo Caudete Palau 2º DAM Semi
  * Logica de negocio que se encarga del  Usuario
  */
 class UsuarioNegocio(context: Context) {

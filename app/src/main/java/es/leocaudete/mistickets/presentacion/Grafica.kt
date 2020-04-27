@@ -21,6 +21,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.LinkedHashSet
 
+/**
+ * @autor Leonardo Caudete Palau 2º DAM Semi
+ */
 class Grafica : AppCompatActivity() {
 
     lateinit var listaTickets:ArrayList<Ticket>
@@ -40,12 +43,16 @@ class Grafica : AppCompatActivity() {
         cargaSpinners()
     }
 
-    // Anulamos la opción de volver a tras a través del botón del móvil
+    /**
+     * Anulamos la opción de volver a tras a través del botón del móvil
+     */
     override fun onBackPressed() {
         //
     }
 
-    // definimos las acciones para los elementos del menu
+    /**
+     * definimos las acciones para los elementos del menu
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -59,6 +66,9 @@ class Grafica : AppCompatActivity() {
         }
     }
 
+    /**
+     * Cargamos los espinner con valores entendibles
+     */
     fun cargaSpinners(){
 
         // Rellenamos el Spinner de Categorias
@@ -114,6 +124,9 @@ class Grafica : AppCompatActivity() {
 
     }
 
+    /**
+     * Aplicamos los filtros a nuestro Array de Tickets y
+     */
     fun mostrarGrafica(view: View) {
 
         var arrayCategorias = resources.getStringArray(R.array.categorias)
@@ -141,6 +154,7 @@ class Grafica : AppCompatActivity() {
                 var i=0f
                 for((v,k) in  misdatos){
                     datos.add(BarEntry(i,k.sumByDouble { x->x.precio }.toFloat()))
+                    // Como no sale todo el nombre, según los resultados mostramos una cantidad de caracteres u otra
                     when(misdatos.size){
                         in 1..2 -> labels.add(utilidades.miSubstring(0,12,arrayCategorias[v]))
                         3 -> labels.add(utilidades.miSubstring(0,8,arrayCategorias[v]))
@@ -148,7 +162,6 @@ class Grafica : AppCompatActivity() {
                         in 7..100 ->  labels.add(utilidades.miSubstring(0,3,arrayCategorias[v]))
                         else -> labels.add(arrayCategorias[v])
                     }
-
                     i++
                 }
 
@@ -215,6 +228,9 @@ class Grafica : AppCompatActivity() {
 
     }
 
+    /**
+     * REglas de validación
+     */
     fun validar():Boolean{
         var validado=false
 

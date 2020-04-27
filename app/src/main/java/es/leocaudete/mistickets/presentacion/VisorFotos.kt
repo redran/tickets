@@ -114,16 +114,9 @@ class VisorFotos : AppCompatActivity() {
      */
     fun cargaFoto(foto: String?) {
         if (foto != null && foto != "null") {
-            if (SharedApp.preferences.bdtype) {
-                ticketsNegocio.cargaFoto(foto,imgFoto)
-            } else {
-                imgFoto.setImageBitmap(BitmapFactory.decodeFile("$storageDir/$foto"))
-            }
-
-
+            imgFoto.setImageBitmap(BitmapFactory.decodeFile("$storageDir/$foto"))
         } else {
             imgFoto.setImageResource(R.drawable.googleg_disabled_color_18)
-            //   imgFoto.setBackgroundResource(R.drawable.googleg_disabled_color_18)
         }
         when (fotoactual) {
             1 -> {

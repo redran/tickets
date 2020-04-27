@@ -27,11 +27,10 @@ import kotlinx.android.synthetic.main.activity_visor_ticket.*
  */
 class VisorTicket : AppCompatActivity() {
 
-    var ticketsNegocio= TicketsNegocio(this)
+    var ticketsNegocio = TicketsNegocio(this)
 
     lateinit var paramTicket: Ticket
     lateinit var storageDir: String
-    lateinit var dbSQL: SQLiteDB
     var gestorMensajes = ShowMessages()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,7 @@ class VisorTicket : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         paramTicket = intent.getSerializableExtra("TicketVisor") as Ticket
-        storageDir =ticketsNegocio.rutaLocal(paramTicket.idTicket)
+        storageDir = ticketsNegocio.rutaLocal(paramTicket.idTicket)
         cargaImgPortada()
         cargarCampos()
 
@@ -53,11 +52,13 @@ class VisorTicket : AppCompatActivity() {
     }
 
     /**
-     * Carga la imagen de portada
+     * Carga la imagen de portada y descarga todas la imagenes en threads distintos para adelantar tiempo
      */
     fun cargaImgPortada() {
 
         if (SharedApp.preferences.bdtype) {
+            // Descarga todas las imagenes del ticket en la rutaLocal
+            ticketsNegocio.descargaFotos(paramTicket, ticketsNegocio.rutaLocalFb())
             if (TextUtils.isEmpty(paramTicket.foto1) || paramTicket.foto1 == null) {
                 imgPortada.setBackgroundResource(R.drawable.common_google_signin_btn_icon_light)
             } else {
@@ -66,9 +67,7 @@ class VisorTicket : AppCompatActivity() {
         } else {
             //lo hacemos desde local
             imgPortada.setImageBitmap(BitmapFactory.decodeFile(storageDir + "/" + paramTicket.foto1))
-
         }
-
     }
 
     /**
@@ -135,58 +134,21 @@ class VisorTicket : AppCompatActivity() {
     /**
      * Borra el ticket seleccionado de firebsae
      * Borra las fotos del dispositivo
-     +* Borra las fotos de Firebase Store
+     * Borra las fotos de Firebase Store
      */
     fun borrarTicket() {
-
-
         if (SharedApp.preferences.bdtype) {
-            for (i in 1..4) {
-                when (i) {
-                    1 -> borraFoto(i, paramTicket.foto1)
-                    2 -> borraFoto(i, paramTicket.foto2)
-                    3 -> borraFoto(i, paramTicket.foto3)
-                    4 -> borraFoto(i, paramTicket.foto4)
-                }
-
-            }
-            // Esto elimina el ticket de Cloud Firebase con todos sus datos
-            val dbRef = FirebaseFirestore.getInstance()
-            val ticketRef = dbRef.collection("User").document(paramTicket.idusuario)
-                .collection("Tickets").document(paramTicket.idTicket).delete()
-                .addOnSuccessListener {
-                    var intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                }
+            ticketsNegocio.borraTicket(paramTicket)
         } else {
-
-            dbSQL.deleteTicket(paramTicket.idTicket)
+            ticketsNegocio.borraTicketLocal(paramTicket.idTicket)
             var intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-
-
     }
 
-    fun borraFoto(numFoto: Int, foto: String?) {
-
-        /**
-        // Comprobamos si existe en local y lo eliminamos
-        if (foto != null) {
-        if (File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").exists()) {
-        File(storageDir.toString() + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg").delete()
-        }
-        }*/
-
-
-        // Comprobamos si existe en la nube y lo eliminamos
-        var storageRef = FirebaseStorage.getInstance().reference
-        var riverRef =
-            storageRef.child(paramTicket.idusuario + "/" + paramTicket.idTicket + "_foto" + numFoto + ".jpg")
-        var deleteTask = riverRef.delete()
-
-    }
-
+    /**
+     * CArga los datos en los campos
+     */
     fun cargarCampos() {
         tvTienda.text = paramTicket.establecimiento
         tvDescripcion.text = paramTicket.titulo
@@ -205,6 +167,9 @@ class VisorTicket : AppCompatActivity() {
         tvPrecio.text = paramTicket.precio.toString() + " €"
     }
 
+    /**
+     * Abre la activity que permite visualizar las imagenes de los tickets
+     */
     fun visorFoto(view: View) {
         val intent = Intent(this, VisorFotos::class.java).apply {
             putExtra("unTicket", paramTicket)
@@ -214,6 +179,9 @@ class VisorTicket : AppCompatActivity() {
         finish()
     }
 
+    /**
+     * Monta un string con las opciones de garantía
+     */
     fun devuelveGarantia(): String {
         var garantia: String
 
@@ -231,6 +199,9 @@ class VisorTicket : AppCompatActivity() {
         return garantia
     }
 
+    /**
+     * Devuelve un string con la ubicacion
+     */
     fun devuelveUbicacion(): String {
         var ubicacion = "No Especificada"
         val arrayProvincias = resources.getStringArray(R.array.provincias)
@@ -247,6 +218,9 @@ class VisorTicket : AppCompatActivity() {
         return ubicacion
     }
 
+    /**
+     * Devuelve un String con la Categoría
+     */
     fun devuelveCategoria(): String {
         val arrayCategorias = resources.getStringArray(R.array.categorias)
         return arrayCategorias[paramTicket.categoria]

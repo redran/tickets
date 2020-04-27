@@ -6,150 +6,191 @@
     android:layout_height="match_parent"
     tools:context=".presentacion.Login">
 
-    <Button
-        android:id="@+id/btn_login"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pricipal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="35dp"
-        android:background="@color/colorPrimary"
-        android:onClick="login"
-        android:text="@string/btn_logina"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/tv_fotgot"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cb_recordar" />
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="37dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="35dp"
+            android:background="@color/colorPrimary"
+            android:onClick="login"
+            android:text="@string/btn_logina"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tv_fotgot"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cb_recordar" />
 
-    <TextView
-        android:id="@+id/tv_registro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="21dp"
-        android:layout_marginRight="21dp"
-        android:layout_marginBottom="25dp"
-        android:onClick="registro"
-        android:text="@string/link_registra"
-        android:textColor="@android:color/primary_text_light_nodisable"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        <TextView
+            android:id="@+id/tv_registro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:layout_marginRight="21dp"
+            android:layout_marginBottom="25dp"
+            android:onClick="registro"
+            android:text="@string/link_registra"
+            android:textColor="@android:color/primary_text_light_nodisable"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-    <EditText
-        android:id="@+id/ed_user"
+        <EditText
+            android:id="@+id/ed_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginEnd="21dp"
+            android:ems="10"
+            android:hint="@string/ed_email"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            app:layout_constraintBottom_toTopOf="@+id/ed_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/ed_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="21dp"
+            android:ems="10"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ed_user"
+            android:importantForAutofill="no"
+            android:hint="@string/ed_password"/>
+
+        <CheckBox
+            android:id="@+id/cb_recordar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="21dp"
+            android:text="@string/check_recuerda_credenciales"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ed_password" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="322dp"
+            android:layout_height="243dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginEnd="21dp"
+            android:layout_marginBottom="13dp"
+            android:contentDescription="TODO"
+            android:rotation="320"
+            app:layout_constraintBottom_toTopOf="@+id/ed_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.489"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:srcCompat="@mipmap/ic_mistickets_foreground"
+            android:background="@mipmap/ic_mistickets_foreground"/>
+
+        <TextView
+
+            android:id="@+id/tv_fotgot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:layout_marginEnd="21dp"
+            android:layout_marginBottom="15dp"
+            android:onClick="forgotPassword"
+            android:text="@string/link_forgotpass"
+            android:textColor="@android:color/primary_text_light_nodisable"
+            android:textColorHint="#2196F3"
+            android:textColorLink="#2196F3"
+            app:layout_constraintBottom_toTopOf="@+id/tv_registro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Switch
+            android:id="@+id/swbd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            android:onClick="clicksw"
+            android:text="@string/sw"
+            app:layout_constraintEnd_toStartOf="@+id/online"
+            app:layout_constraintStart_toEndOf="@+id/offline"
+            app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+
+        <TextView
+            android:id="@+id/offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="115dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/offline"
+            app:layout_constraintEnd_toStartOf="@+id/swbd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+
+        <TextView
+            android:id="@+id/online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/online"
+            app:layout_constraintStart_toEndOf="@+id/swbd"
+            app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/carga"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginEnd="21dp"
-        android:ems="10"
-        android:hint="@string/ed_email"
-        android:importantForAutofill="no"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/ed_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/ed_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="21dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_user"
-        android:importantForAutofill="no"
-        android:hint="@string/ed_password"/>
+        <ProgressBar
+            android:id="@+id/pb_carga"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="203dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginEnd="21dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/cb_recordar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="21dp"
-        android:text="@string/check_recuerda_credenciales"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_password" />
+        <TextView
+            android:id="@+id/tv_carga"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="21dp"
+            android:text="@string/carga"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pb_carga" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="322dp"
-        android:layout_height="243dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginBottom="13dp"
-        android:contentDescription="TODO"
-        android:rotation="320"
-        app:layout_constraintBottom_toTopOf="@+id/ed_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@mipmap/ic_mistickets_foreground"
-        android:background="@mipmap/ic_mistickets_foreground"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
 
-        android:id="@+id/tv_fotgot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginBottom="15dp"
-        android:onClick="forgotPassword"
-        android:text="@string/link_forgotpass"
-        android:textColor="@android:color/primary_text_light_nodisable"
-        android:textColorHint="#2196F3"
-        android:textColorLink="#2196F3"
-        app:layout_constraintBottom_toTopOf="@+id/tv_registro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Switch
-        android:id="@+id/swbd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
-        android:onClick="clicksw"
-        android:text="@string/sw"
-        app:layout_constraintEnd_toStartOf="@+id/online"
-        app:layout_constraintStart_toEndOf="@+id/offline"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
-
-    <TextView
-        android:id="@+id/offline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="115dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
-        android:text="@string/offline"
-        app:layout_constraintEnd_toStartOf="@+id/swbd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
-
-    <TextView
-        android:id="@+id/online"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/online"
-        app:layout_constraintStart_toEndOf="@+id/swbd"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

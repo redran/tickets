@@ -6,4 +6,8 @@
         android:icon="@android:drawable/ic_menu_camera"
         app:showAsAction="ifRoom"
         android:id="@+id/gestionfotos"/>
+    <item android:title="direccion"
+        android:icon="@android:drawable/ic_menu_directions"
+        app:showAsAction="ifRoom"
+        android:id="@+id/gestiondirecciones"/>
 </menu>

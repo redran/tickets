@@ -41,14 +41,16 @@
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/etPrecio" />
 
     <EditText
         android:id="@+id/ed_tienda"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="21dp"
         android:ems="10"
         android:hint="@string/tv_tienda"
@@ -59,53 +61,11 @@
         app:layout_constraintTop_toBottomOf="@+id/ed_descripcion" />
 
     <EditText
-        android:id="@+id/ed_direccion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginEnd="21dp"
-        android:ems="10"
-        android:hint="@string/direccion"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_tienda" />
-
-    <EditText
-        android:id="@+id/ed_localidades"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginEnd="21dp"
-        android:ems="10"
-        android:hint="@string/localidad"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_provincias" />
-
-    <Spinner
-        android:id="@+id/spinner_provincias"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="21dp"
-        android:ems="10"
-        android:hint="@string/provincia"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_direccion" />
-
-    <EditText
         android:id="@+id/text_fecha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="80dp"
         android:clickable="false"
         android:ems="10"
@@ -116,15 +76,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_localidades" />
+        app:layout_constraintTop_toBottomOf="@+id/ed_tienda" />
 
     <ImageButton
         android:id="@+id/img_calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="21dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_localidades"
+        app:layout_constraintTop_toBottomOf="@+id/ed_tienda"
         app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 
     <Spinner
@@ -208,6 +169,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="21dp"
         android:autofillHints="@string/selecciona_categoria"
         app:layout_constraintEnd_toEndOf="parent"
@@ -217,48 +179,48 @@
     <EditText
         android:id="@+id/etPrecio"
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="21dp"
         android:ems="10"
         android:hint="@string/precio"
         android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
         android:text="€"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/etPrecio"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <CheckBox
-        android:onClick="isDietas"
         android:id="@+id/cb_dietas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="21dp"
         android:layout_marginTop="15dp"
+        android:onClick="isDietas"
         android:text="@string/dietas"
-        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
 
     <Button
-        android:onClick="gestdietas"
         android:id="@+id/btn_dietas"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="21dp"
         android:background="@color/colorPrimary"
+        android:onClick="gestdietas"
         android:text="@string/gest_dietas"
         android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cb_dietas"
         app:layout_constraintTop_toBottomOf="@+id/spinner_categorias" />
 
 
