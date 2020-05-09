@@ -195,6 +195,7 @@
     <!-- Array de Categorías -->
     <string-array name="categorias">
         <item>Selecciona una Categoría</item>
+        <item>Otros</item>
         <item>Restauración</item>
         <item>Alimentación</item>
         <item>Informática</item>
@@ -211,7 +212,7 @@
         <item>Gastos Hogar</item>
         <item>Gastos Movilidad</item>
         <item>Hospedaje</item>
-        <item>Otros</item>
+        <item>Material Obra</item>
 
     </string-array>
 

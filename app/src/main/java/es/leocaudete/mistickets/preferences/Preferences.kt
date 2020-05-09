@@ -7,7 +7,7 @@ import android.content.SharedPreferences
 /**
  * @author Leonardo Caudete Palau - 2º DAM
  */
-class Preferences(context:Context) {
+class   Preferences(context:Context) {
 
     /**
      * Almacena true o false si se quiere guardar o no la sesion
