@@ -1,6 +1,7 @@
 package es.leocaudete.mistickets.presentacion
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
@@ -19,12 +20,16 @@ import es.leocaudete.mistickets.adapters.RecyclerAdapter
 import es.leocaudete.mistickets.dao.FirestoreDB
 import es.leocaudete.mistickets.dao.SQLiteDB
 import es.leocaudete.mistickets.modelo.Ticket
+import es.leocaudete.mistickets.negocio.ApiRestNegocio
 import es.leocaudete.mistickets.negocio.TicketsNegocio
 import es.leocaudete.mistickets.negocio.UsuarioNegocio
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.utilidades.ShowMessages
 import es.leocaudete.mistickets.utilidades.Utilidades
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -35,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     var ticketsNegocio = TicketsNegocio(this)
     var usuarioNegocio = UsuarioNegocio(this)
+    var apirRestNegocio = ApiRestNegocio(this)
     var context=this
 
     private val TAG = "DocSnippets"
@@ -49,6 +55,9 @@ class MainActivity : AppCompatActivity() {
 
     val utils = Utilidades()
     val gestorMensajes = ShowMessages()
+
+    // API REST
+    var service = apirRestNegocio.getService()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,32 +137,33 @@ class MainActivity : AppCompatActivity() {
             val dbRef = FirebaseFirestore.getInstance() // referencia a la base de datos
             val auth = FirebaseAuth.getInstance() // Usuario autentificado
 
-            val userID = auth.currentUser?.uid.toString() // ID del usuario autentificado
+            val userID = "1587979590"//auth.currentUser?.uid.toString() // ID del usuario autentificado
             val rutaTickets = "User/" + userID + "/Tickets"
 
-            val ticketsRef = dbRef.collection(rutaTickets)
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        val ticket = document.toObject(Ticket::class.java)
-                        tickets.add(ticket)
-                    }
+            service.getTickets(userID).enqueue(object : Callback<List<Ticket>> {
 
+                override fun onResponse(call: Call<List<Ticket>>?, response: Response<List<Ticket>>) {
+                    val ticketsRest = response?.body()
+                    if(ticketsRest!=null){
+                        // Una vez tenemos los tickets del usuario tenemos que pasar por el filtro
+                        for(i in ticketsRest.indices){
+                            tickets.add(ticketsRest[i])
+                        }
+                    }
                     setUpRecyclerView(reqTickets, 1)
                     if (SharedApp.preferences.avisounico == 0) {
                         SharedApp.preferences.avisounico = 1
                         ticketsQueVanACaducar.clear()
                         ticketsQueVanACaducar = ticketsNegocio.revisaGarantias(tickets)
                     }
+
                 }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(
-                        this,
-                        "Se ha producido une error al cargar los datos: ",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    Log.d(TAG, "Error getting documents:", exception)
+
+                override fun onFailure(call: Call<List<Ticket>>, t: Throwable) {
+                    gestorMensajes.showAlertOneButton("ERROR", "Se ha producido un error el leer lo datos.", this@MainActivity )
                 }
+            })
+
         } else {
             // Off-Line. Se carga de SQLite
             var ticketsUsu =

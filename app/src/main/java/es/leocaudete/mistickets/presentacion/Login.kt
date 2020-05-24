@@ -184,6 +184,8 @@ class Login : AppCompatActivity() {
         val user: String = ed_user.text.toString()
         val password: String = ed_password.text.toString()
 
+
+
         if (swbd.isChecked) {
             loginNegocio.loginOnLine(user, password, pricipal,carga)
         } else {

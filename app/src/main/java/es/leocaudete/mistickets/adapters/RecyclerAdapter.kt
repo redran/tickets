@@ -88,7 +88,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
             {
                 var rutaFoto:String
                 if(SharedApp.preferences.bdtype){
-                    ticketNegocio.descargaFotoCloudInicial(ticket.foto1.toString(),foto)
+                  //  ticketNegocio.descargaFotoCloudInicial(ticket.foto1.toString(),foto)
                 }else{
                     rutaFoto=ticketNegocio.rutaLocal(ticket.idTicket) +"/"+ticket.foto1
                     foto.setImageBitmap(BitmapFactory.decodeFile(rutaFoto))

@@ -8,7 +8,9 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import es.leocaudete.mistickets.dao.ApiRest
 import es.leocaudete.mistickets.dao.FirestoreDB
+import es.leocaudete.mistickets.modelo.Ticket
 import es.leocaudete.mistickets.preferences.SharedApp
 import es.leocaudete.mistickets.presentacion.MainActivity
 import es.leocaudete.mistickets.utilidades.ShowMessages
@@ -23,6 +25,7 @@ class LoginNegocio(context: Context, versionApp: String) {
 
     private var dbFirebase = FirestoreDB(context)
     private var usuarioNegocio=UsuarioNegocio(context)
+    private var apirRest=ApiRest(context)
 
 
     private lateinit var storageDir: String

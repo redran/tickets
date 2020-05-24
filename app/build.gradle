@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
 android {
+    compileOptions {
+        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "es.leocaudete.mistickets"
@@ -50,6 +54,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     // Para las graficas de Barras
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    // Para usar un API REST y tranformar en JSON
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
 }
 apply plugin: 'com.google.gms.google-services'
